@@ -4,14 +4,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.TextView;
 
 public class Setting2Activity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting2);
-
+        Globals tr = (Globals) getIntent().getSerializableExtra("test_result");
+        TextView hea = new TextView(this);
+        hea.setText(tr.getGlobal(Globals.subject.HEALTH));
+        setContentView(hea,new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     }
 
     @Override

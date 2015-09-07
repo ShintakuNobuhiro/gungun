@@ -18,7 +18,14 @@ public class SettingActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingActivity.this, Setting2Activity.class);
+                String hea="健康2";
+                String har="協調";
+                String des="やる気";
+                String sel="自立";
+                Globals gl = new Globals(hea, har, des, sel);
+
+                Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);
+                intent.putExtra("test_result", gl);
                 startActivity(intent);
             }
         });

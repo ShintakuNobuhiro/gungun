@@ -1,29 +1,31 @@
 package com.example.shintaku.test;
 
-import android.app.Application;
-import android.widget.Toast;
+import java.io.Serializable;
 
-public class Globals extends Application {
+public class Globals implements Serializable {
+    String health = "健康";
+    String harmony = "協調";
+    String desire = "やる気";
+    String self = "自立";
 
-    boolean mIsBound;
-    boolean a;
-    boolean b;
-    boolean c;
-    boolean d;
-    boolean connected;
-    int length;
-    int[] buffer;
-    byte[] data;
-
-    public void init(){
-        mIsBound = false;
-        a = false;
-        b = false;
-        c = false;
-        d = false;
+    enum subject{
+        HEALTH,HARMONY,DESIRE,SELF
     }
 
-    public void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    public Globals(String hea, String har, String des, String sel) {
+        health = hea;
+        harmony = har;
+        desire = des;
+        self = sel;
+    }
+
+    public String getGlobal(subject sub) {
+        switch (sub) {
+            case HEALTH: return health;
+            case HARMONY: return harmony;
+            case DESIRE: return desire;
+            case SELF: return  self;
+            default: return "error";
+        }
     }
 }
