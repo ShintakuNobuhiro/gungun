@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <string name="start">カードをタッチしてね</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_mission">MissionActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_level">LevelActivity</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_sugoroku">SugorokuActivity</string>
+    <string name="title_activity_setting2">Setting2Activity</string>
+</resources>

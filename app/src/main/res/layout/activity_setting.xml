@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.shintaku.test.MissionActivity"
+    android:theme="@style/Base.V11.Theme.AppCompat.Dialog">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="健康"
+        android:id="@+id/toggleButton"
+        android:checked="false"
+        android:background="@color/lightblue"
+        android:textSize="40dp"
+        android:height="300dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/toggleButton3"
+        android:layout_alignStart="@+id/toggleButton3"
+        android:layout_toLeftOf="@+id/toggleButton2"
+        android:layout_toStartOf="@+id/toggleButton2"
+        android:layout_above="@+id/toggleButton3" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggleButton2"
+        android:width="300dp"
+        android:height="250dp"
+        android:background="@color/green"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="お友達とあいさつ"
+        android:clickable="false"
+        android:enabled="false"
+        android:layout_alignTop="@+id/toggleButton"
+        android:layout_above="@+id/toggleButton3" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="運動とお仕事"
+        android:id="@+id/toggleButton3"
+        android:width="300dp"
+        android:height="250dp"
+        android:background="@color/orange"
+        android:layout_toLeftOf="@+id/toggleButton4"
+        android:layout_toStartOf="@+id/toggleButton4"
+        android:textSize="40dp"
+        android:layout_alignParentBottom="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="暮らし"
+        android:id="@+id/toggleButton4"
+        android:width="300dp"
+        android:height="250dp"
+        android:background="@color/red"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:enabled="false"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/toggleButton2" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="戻る"
+        android:id="@+id/button3"
+        android:width="200dp"
+        android:height="100dp"
+        android:textSize="50dp"
+        android:background="@color/blue"
+        android:layout_alignBottom="@+id/toggleButton3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+</RelativeLayout>
