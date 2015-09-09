@@ -6,7 +6,18 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.shintaku.test.Setting2Activity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="ジャンル"
+        android:id="@+id/textView"
+        android:textSize="40dp"
+        android:background="@color/blue"
+        android:textColor="#FFF"
+        android:password="false"
+        android:phoneNumber="false"
+        android:gravity="center"
+        android:width="250dp"
+        android:height="200dp" />
 </RelativeLayout>

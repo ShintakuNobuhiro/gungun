@@ -14,21 +14,31 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        Button btnNext = (Button) this.findViewById(R.id.toggleButton);
+        Button btnNext = (Button) this.findViewById(R.id.toggleButton); //健康
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String hea="健康2";
-                String har="協調";
-                String des="やる気";
-                String sel="自立";
-                Globals gl = new Globals(hea, har, des, sel);
+                String txt = "健康";
+                Settings text = new Settings(txt);
 
-                Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);
-                intent.putExtra("test_result", gl);
+                Intent intent = new Intent(SettingActivity.this, Setting2Activity.class);
+                intent.putExtra("test_result", text);
                 startActivity(intent);
             }
         });
+        btnNext = (Button) this.findViewById(R.id.toggleButton3); //運動とお仕事
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String txt="運動とお仕事";
+                Settings text = new Settings(txt);
+
+                Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);
+                intent.putExtra("test_result", text);
+                startActivity(intent);
+            }
+        });
+
         btnNext = (Button) this.findViewById(R.id.button3);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override

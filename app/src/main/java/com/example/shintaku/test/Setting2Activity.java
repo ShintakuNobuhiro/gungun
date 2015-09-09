@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 
 public class Setting2Activity extends AppCompatActivity {
@@ -12,10 +11,9 @@ public class Setting2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting2);
-        Globals tr = (Globals) getIntent().getSerializableExtra("test_result");
-        TextView hea = new TextView(this);
-        hea.setText(tr.getGlobal(Globals.subject.HEALTH));
-        setContentView(hea,new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        Settings tr = (Settings) getIntent().getSerializableExtra("test_result");
+        TextView a = (TextView)this.findViewById(R.id.textView);
+        a.setText(tr.getSetting(Settings.subject.TEXT));
     }
 
     @Override
