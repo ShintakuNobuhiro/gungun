@@ -29,21 +29,18 @@ public class SettingActivity extends AppCompatActivity {
                 // do something
             }
             public void onPostExecute(final String result) {
-                Log.d("start","start");
-                if (result != null) {
-                    try {
-                        JSONObject json = new JSONObject(result);
-                        JSONArray missions = json.getJSONArray("missions");
+                Log.d("start",result);
+                try {
+                    JSONObject json = new JSONObject(result);
+                    JSONArray missions = json.getJSONArray("missions");
 
-                        for (int i = 0; i < missions.length(); i++) {
-                            JSONObject mission = missions.getJSONObject(i);
-                            description[i] = mission.getString("description");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    for (int i = 0; i < missions.length(); i++) {
+                        JSONObject mission = missions.getJSONObject(i);
+                        description[i] = mission.getString("description");
                     }
-                } else {
-                    Log.e("result","null");
+                } catch (JSONException e) {
+                    Log.e("error",e.toString());
+                    e.printStackTrace();
                 }
             }
 
@@ -69,11 +66,13 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
         btnNext = (Button) this.findViewById(R.id.toggleButton3); //運動とお仕事
+        final Button finalBtnNext1 = btnNext;
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String txt="運動とお仕事";
                 Settings text = new Settings(txt);
+                finalBtnNext1.setText(description[1]);
 
                 Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);
                 intent.putExtra("test_result", text);
