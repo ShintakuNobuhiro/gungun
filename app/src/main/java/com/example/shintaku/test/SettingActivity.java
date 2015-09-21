@@ -23,10 +23,8 @@ public class SettingActivity extends AppCompatActivity {
 
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {
-                // do something
             }
             public void onProgressUpdate(int progress) {
-                // do something
             }
             public void onPostExecute(final String result) {
                 Log.d("start",result);
@@ -43,21 +41,19 @@ public class SettingActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             public void onCancelled() {
-                // do something
             }
         });
         asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/users/1.json");
 
-        Button btnNext = (Button) this.findViewById(R.id.toggleButton); //健康
-        final Button finalBtnNext = btnNext;
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        Button btn = (Button) this.findViewById(R.id.toggleButton); //健康
+        final Button finalBtn = btn;
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String txt = "健康";
                 Settings text = new Settings(txt);
-                finalBtnNext.setText(description[0]);
+                finalBtn.setText(description[0]);
 
                 Intent intent = new Intent(SettingActivity.this, Setting2Activity.class);
                 intent.putExtra("test_result", text);
@@ -65,14 +61,14 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
-        btnNext = (Button) this.findViewById(R.id.toggleButton3); //運動とお仕事
-        final Button finalBtnNext1 = btnNext;
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        btn = (Button) this.findViewById(R.id.toggleButton3); //運動とお仕事
+        final Button finalBtn1 = btn;
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String txt="運動とお仕事";
                 Settings text = new Settings(txt);
-                finalBtnNext1.setText(description[1]);
+                finalBtn1.setText(description[1]);
 
                 Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);
                 intent.putExtra("test_result", text);
@@ -80,8 +76,8 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        btnNext = (Button) this.findViewById(R.id.button3);
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        btn = (Button) this.findViewById(R.id.button3);
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //トップ画面に戻る実装
