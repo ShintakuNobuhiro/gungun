@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -33,6 +34,10 @@ public class LevelActivity extends AppCompatActivity {
                     final TextView nameTxt = (TextView) findViewById(R.id.name);
                     nameTxt.setText(name[0]);
                     Log.d("name", name[0]);
+                    ProgressBar progressBar1 = (ProgressBar)findViewById(R.id.ProgressBarHorizontal);
+                    progressBar1.setMax(100); // 水平プログレスバーの最大値を設定
+                    progressBar1.setProgress(20); // 水平プログレスバーの値を設定
+                    progressBar1.setSecondaryProgress(60); // 水平プログレスバーのセカンダリ値を設定
                 } catch (JSONException e) {
                     Log.e("error",e.toString());
                     e.printStackTrace();
