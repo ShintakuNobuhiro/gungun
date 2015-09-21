@@ -18,7 +18,6 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        Log.d("a", "a");
         final String[] description = new String[2];
 
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {

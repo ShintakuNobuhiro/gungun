@@ -17,6 +17,7 @@ public class Setting2Activity extends AppCompatActivity {
         Settings tr = (Settings) getIntent().getSerializableExtra("test_result");
         TextView a = (TextView)this.findViewById(R.id.textView);
         a.setText(tr.getSetting(Settings.subject.TEXT));
+        //戻るボタン
         Button btn = (Button) findViewById(R.id.button5);
         btn.setOnClickListener(new View.OnClickListener() {
                 @Override
