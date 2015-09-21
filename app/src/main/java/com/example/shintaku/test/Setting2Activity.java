@@ -9,14 +9,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+//課題小項目選択
 public class Setting2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting2);
-        Settings tr = (Settings) getIntent().getSerializableExtra("test_result");
+
+        //大項目名表示
+        Settings tr = (Settings) getIntent().getSerializableExtra("test_result");//大項目名のインテント間引き継ぎ
         TextView a = (TextView)this.findViewById(R.id.textView);
         a.setText(tr.getSetting(Settings.subject.TEXT));
+
         //戻るボタン
         Button btn = (Button) findViewById(R.id.button5);
         btn.setOnClickListener(new View.OnClickListener() {

@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//課題大項目選択画面
 public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +29,11 @@ public class SettingActivity extends AppCompatActivity {
             public void onPostExecute(final String result) {
                 Log.d("start",result);
                 try {
+                    //パース準備
                     JSONObject json = new JSONObject(result);
                     JSONArray missions = json.getJSONArray("missions");
 
+                    //mission分解、説明の配列化
                     for (int i = 0; i < missions.length(); i++) {
                         JSONObject mission = missions.getJSONObject(i);
                         description[i] = mission.getString("description");

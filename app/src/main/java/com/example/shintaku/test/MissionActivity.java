@@ -8,11 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-
-
+//チェック画面
 public class MissionActivity extends AppCompatActivity {
-    private Globals globals;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
