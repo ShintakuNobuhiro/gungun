@@ -53,7 +53,7 @@ public class SettingActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txt = "健康";
+                String txt = "1";
                 Settings text = new Settings(txt);
                 finalBtn.setText(description[0]);
 
@@ -68,8 +68,9 @@ public class SettingActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txt="運動とお仕事";
+                String txt="2";
                 Settings text = new Settings(txt);
+
                 finalBtn1.setText(description[1]);
 
                 Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);

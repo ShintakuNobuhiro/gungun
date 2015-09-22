@@ -3,11 +3,16 @@ package com.example.shintaku.test;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 //課題小項目選択
 public class Setting2Activity extends AppCompatActivity {
@@ -19,21 +24,66 @@ public class Setting2Activity extends AppCompatActivity {
         //大項目名表示
         Settings tr = (Settings) getIntent().getSerializableExtra("test_result");//大項目名のインテント間引き継ぎ
         TextView a = (TextView)this.findViewById(R.id.textView);
-        a.setText(tr.getSetting(Settings.subject.TEXT));
+        int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
+        if(category == 1) {
+            a.setText("健康");
+        } else if (category == 2) {
+            a.setText("運動とお仕事");
+        } else {
+            a.setText("error");
+        }
+
+        final String description[] = new String[5];
+        ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
+            public void onPreExecute() {
+            }
+            public void onProgressUpdate(int progress) {
+            }
+            public void onPostExecute(final String result) {
+                Log.d("start", result);
+                try {
+                    //パース準備
+                    JSONObject json = new JSONObject(result);
+                    JSONArray missions = json.getJSONArray("missions").getJSONArray(Integer.parseInt("level1"));
+
+                    //mission分解、説明の配列化
+                    for (int i = 0; i < missions.length(); i++) {
+                        JSONObject mission = missions.getJSONObject(i);
+                        description[i] = mission.getString("description");
+                        Log.d("description",i+","+description[i]);
+                    }
+                } catch (JSONException e) {
+                    Log.e("error",e.toString());
+                    e.printStackTrace();
+                }
+            }
+            public void onCancelled() {
+            }
+        });
+        asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/missions/health.json");
+
+        //missionの表示
+        final Button button[] = new Button[5];
+        for(int i = 0; i < button.length; i++) {
+            String tmp = "R.id." + String.valueOf(i+1);
+            //button[i] = (Button) findViewById(Integer.parseInt(tmp));
+            //button[i].setText(description[i]);
+        }
 
         //戻るボタン
         Button btn = (Button) findViewById(R.id.button5);
         btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Setting2Activity.this, SettingActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                }
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Setting2Activity.this, SettingActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
             }
-        );
+        });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
