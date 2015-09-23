@@ -44,13 +44,22 @@ public class Setting2Activity extends AppCompatActivity {
                 try {
                     //パース準備
                     JSONObject json = new JSONObject(result);
-                    JSONArray missions = json.getJSONArray("missions").getJSONArray(Integer.parseInt("level1"));
+                    JSONArray missions = json.getJSONArray("missions");
 
                     //mission分解、説明の配列化
                     for (int i = 0; i < missions.length(); i++) {
                         JSONObject mission = missions.getJSONObject(i);
                         description[i] = mission.getString("description");
                         Log.d("description",i+","+description[i]);
+                    }
+
+                    //missionの表示
+                    final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
+                    final Button button[] =new Button[id.length];
+                    for(int i = 0; i < id.length; i++) {
+                        button[i] = (Button) findViewById(id[i]);
+                        button[i].setText(description[i]);
+
                     }
                 } catch (JSONException e) {
                     Log.e("error",e.toString());
@@ -60,15 +69,7 @@ public class Setting2Activity extends AppCompatActivity {
             public void onCancelled() {
             }
         });
-        asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/missions/health.json");
-
-        //missionの表示
-        final Button button[] = new Button[5];
-        for(int i = 0; i < button.length; i++) {
-            String tmp = "R.id." + String.valueOf(i+1);
-            //button[i] = (Button) findViewById(Integer.parseInt(tmp));
-            //button[i].setText(description[i]);
-        }
+        asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/missions/health/1.json");
 
         //戻るボタン
         Button btn = (Button) findViewById(R.id.button5);
@@ -82,7 +83,6 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
     }
-
 
 
     @Override
