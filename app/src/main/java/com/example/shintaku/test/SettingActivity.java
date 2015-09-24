@@ -63,7 +63,7 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
-        btn = (Button) this.findViewById(R.id.toggleButton3); //運動とお仕事
+        btn = (Button) this.findViewById(R.id.toggleButton3); //お友達・あいさつ
         final Button finalBtn1 = btn;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override

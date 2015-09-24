@@ -20,6 +20,7 @@ public class Setting2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting2);
+        String URL = null;
 
         //大項目名表示
         Settings tr = (Settings) getIntent().getSerializableExtra("test_result");//大項目名のインテント間引き継ぎ
@@ -27,8 +28,10 @@ public class Setting2Activity extends AppCompatActivity {
         int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
         if(category == 1) {
             a.setText("健康");
+            URL = "https://railstutorial-ukyankyan-1.c9.io/missions/health/1.json";
         } else if (category == 2) {
-            a.setText("運動とお仕事");
+            a.setText("お友達/あいさつ");
+            URL = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/1.json";
         } else {
             a.setText("error");
         }
@@ -69,7 +72,7 @@ public class Setting2Activity extends AppCompatActivity {
             public void onCancelled() {
             }
         });
-        asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/missions/health/1.json");
+        asyncGet.execute(URL);
 
         //戻るボタン
         Button btn = (Button) findViewById(R.id.button5);
