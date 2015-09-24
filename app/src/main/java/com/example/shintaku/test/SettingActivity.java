@@ -48,7 +48,7 @@ public class SettingActivity extends AppCompatActivity {
         });
         asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/users/1.json");
 
-        Button btn = (Button) this.findViewById(R.id.toggleButton); //健康
+        Button btn = (Button) this.findViewById(R.id.checkButton); //健康
         final Button finalBtn = btn;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +63,7 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
-        btn = (Button) this.findViewById(R.id.toggleButton3); //お友達・あいさつ
+        btn = (Button) this.findViewById(R.id.checkButton3); //お友達・あいさつ
         final Button finalBtn1 = btn;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
