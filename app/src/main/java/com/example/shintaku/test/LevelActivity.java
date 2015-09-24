@@ -51,13 +51,11 @@ public class LevelActivity extends AppCompatActivity {
                     Log.d("name", name[0]);
 
                     //プログレスバーの伸び率設定等
-                    ProgressBar progressBar[] = new ProgressBar[4];
-                    progressBar[0] = (ProgressBar) findViewById(R.id.progressBar);
-                    progressBar[1] = (ProgressBar) findViewById(R.id.progressBar2);
-                    progressBar[2] = (ProgressBar) findViewById(R.id.progressBar3);
-                    progressBar[3] = (ProgressBar) findViewById(R.id.progressBar4);
+                    int id[] = {R.id.progressBar,R.id.progressBar2,R.id.progressBar3,R.id.progressBar4};
+                    ProgressBar progressBar[] = new ProgressBar[id.length];
                     for (int i = 0; i < statuses.length(); i++) {
                         Log.d("exp", exp[i]);
+                        progressBar[i] = (ProgressBar) findViewById(id[i]);
                         progressBar[i].setMax(Integer.parseInt(next[i])); // 水平プログレスバーの最大値を設定
                         progressBar[i].setProgress(Integer.parseInt(exp[i])); // 水平プログレスバーの値を設定
                         progressBar[i].setSecondaryProgress(60); // 水平プログレスバーのセカンダリ値を設定
