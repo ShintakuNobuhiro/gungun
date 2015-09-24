@@ -20,6 +20,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         final String[] description = new String[2];
+        Settings tr = (Settings) getIntent().getSerializableExtra("test_result");//大項目名のインテント間引き継ぎ
 
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {

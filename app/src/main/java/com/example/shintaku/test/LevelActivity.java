@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 //トップ画面
 public class LevelActivity extends AppCompatActivity {
 

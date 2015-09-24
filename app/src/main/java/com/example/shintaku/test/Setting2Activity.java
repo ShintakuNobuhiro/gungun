@@ -41,6 +41,7 @@ public class Setting2Activity extends AppCompatActivity {
         URL[0] = URI(category,level);
 
         final String description[] = new String[5];
+        final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {
             }
@@ -61,7 +62,6 @@ public class Setting2Activity extends AppCompatActivity {
                     }
 
                     //missionの表示
-                    final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
                     final Button button[] =new Button[id.length];
                     for(int i = 0; i < id.length; i++) {
                         button[i] = (Button) findViewById(id[i]);
@@ -180,7 +180,6 @@ public class Setting2Activity extends AppCompatActivity {
                             for(int i = 0; i < id.length; i++) {
                                 button[i] = (Button) findViewById(id[i]);
                                 button[i].setText(description[i]);
-
                             }
                         } catch (JSONException e) {
                             Log.e("error",e.toString());
@@ -194,6 +193,20 @@ public class Setting2Activity extends AppCompatActivity {
                 asyncGet.execute(URL[0]);
             }
         });
+
+        Button mission[] = new Button[id.length];
+        for(int i=0; i<id.length; i++) {
+            mission[i] = (Button) findViewById(id[i]);
+            mission[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Setting2Activity.this, SettingActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
 
