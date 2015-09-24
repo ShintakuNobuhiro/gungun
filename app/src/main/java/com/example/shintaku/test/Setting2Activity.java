@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 //課題小項目選択
 public class Setting2Activity extends AppCompatActivity {
+    int level = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,7 @@ public class Setting2Activity extends AppCompatActivity {
         Settings tr = (Settings) getIntent().getSerializableExtra("test_result");//大項目名のインテント間引き継ぎ
         TextView a = (TextView)this.findViewById(R.id.textView);
         int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
+
         if(category == 1) {
             a.setText("健康");
             URL = "https://railstutorial-ukyankyan-1.c9.io/missions/health/1.json";
@@ -83,6 +85,16 @@ public class Setting2Activity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
+            }
+        });
+
+        Button next = (Button) findViewById(R.id.next);
+        final TextView levelTxt = (TextView) findViewById(R.id.level);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                level++;
+                levelTxt.setText(String.valueOf(level));
             }
         });
     }
