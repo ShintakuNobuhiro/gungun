@@ -34,7 +34,6 @@ public class Setting2Activity extends AppCompatActivity {
             a.setText("健康");
         } else if (category == 2) {
             a.setText("お友達/あいさつ");
-            URL[0] = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+level+".json";
         } else {
             a.setText("error");
         }
