@@ -92,7 +92,6 @@ public class Setting2Activity extends AppCompatActivity {
 
         Button next = (Button) findViewById(R.id.next);
         final TextView levelTxt = (TextView) findViewById(R.id.level);
-        final String finalURL = URL[0];
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,9 +221,9 @@ public class Setting2Activity extends AppCompatActivity {
     public String URI(int cat,int lvl){
         String tmp = null;
         if(cat == 1) {
-            tmp = "https://railstutorial-ukyankyan-1.c9.io/missions/health/"+level+".json";
+            tmp = "https://railstutorial-ukyankyan-1.c9.io/missions/health/"+lvl+".json";
         } else if (cat == 2) {
-            tmp = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+level+".json";
+            tmp = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+lvl+".json";
         } else {
             Log.d("error","error");
         }
