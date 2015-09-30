@@ -30,10 +30,9 @@ public class Setting2Activity extends AppCompatActivity {
         TextView a = (TextView)this.findViewById(R.id.textView);
         final int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
 
-        if(category == 1) {
-            a.setText("健康");
-        } else if (category == 2) {
-            a.setText("お友達/あいさつ");
+        if(category >= 1 || category <= 4) {
+            final int id []= {R.string.genre1, R.string.genre2, R.string.genre3, R.string.genre4};
+            a.setText(id[category]);
         } else {
             a.setText("error");
         }

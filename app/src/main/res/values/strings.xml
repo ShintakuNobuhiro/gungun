@@ -10,4 +10,8 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_sugoroku">SugorokuActivity</string>
     <string name="title_activity_setting2">Setting2Activity</string>
+    <string name="genre1">健康</string>
+    <string name="genre2">お友達/あいさつ</string>
+    <string name="genre3">運動とお仕事</string>
+    <string name="genre4">暮らし</string>
 </resources>
