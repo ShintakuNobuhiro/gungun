@@ -21,8 +21,8 @@ public class Setting2Activity extends AppCompatActivity {
     int level = 1; //現在の閲覧レベル
     int lvlMin = 1; //最低
     int lvlMax = 4; //最高
-    int page = 1; // ページ
     final int firstPage = 1; //初期ページ
+    int page = firstPage;
     ArrayList<String> description = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +34,15 @@ public class Setting2Activity extends AppCompatActivity {
         TextView a = (TextView)this.findViewById(R.id.textView);
         final int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
 
-        if(category >= 1 || category <= 4) {
+        if(category >= 0 || category <= 3) {
             final int id []= {R.string.genre1, R.string.genre2, R.string.genre3, R.string.genre4};
-            a.setText(id[category]);
+            a.setText(id[category-1]);
         } else {
             a.setText("error");
         }
 
         final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
-        jsonSetText(category,level,0);
+        jsonSetText(category,level,page);
 
         //戻るボタン
         Button btn = (Button) findViewById(R.id.button5);
@@ -91,6 +91,7 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
 
+        //ページ送り
         Button nextPage = (Button) findViewById(R.id.nextPage);
         final TextView pageTxt = (TextView) findViewById(R.id.page);
         nextPage.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +104,7 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
 
+        //ページ戻し
         Button prevPage = (Button) findViewById(R.id.prevPage);
         prevPage.setOnClickListener(new View.OnClickListener() {
             @Override
