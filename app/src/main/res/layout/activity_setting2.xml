@@ -111,12 +111,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="←"
-        android:id="@+id/prev"
+        android:id="@+id/prevLevel"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
         android:background="@color/blue"
         android:textSize="30dp"
         android:gravity="center"
-        android:layout_alignTop="@+id/next"
+        android:layout_alignTop="@+id/nextLevel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -125,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="→"
-        android:id="@+id/next"
+        android:id="@+id/nextLevel"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
         android:background="@color/blue"
         android:textSize="30dp"
@@ -142,11 +142,55 @@
         android:id="@+id/level"
         android:background="@color/blue"
         android:textColor="@color/white"
-        android:layout_toRightOf="@+id/prev"
-        android:layout_toStartOf="@+id/next"
+        android:layout_toRightOf="@+id/prevLevel"
+        android:layout_toStartOf="@+id/nextLevel"
         android:gravity="center"
         android:textSize="20dp"
         android:layout_alignBottom="@+id/mission3"
-        android:layout_alignTop="@+id/prev" />
+        android:layout_alignTop="@+id/prevLevel" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="←"
+        android:id="@+id/prevPage"
+        android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
+        android:background="@color/blue"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_alignTop="@+id/mission4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="ページ1"
+        android:id="@+id/page"
+        android:background="@color/blue"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:layout_alignTop="@+id/prevPage"
+        android:layout_toRightOf="@+id/prevPage"
+        android:layout_alignBottom="@+id/prevPage"
+        android:layout_alignRight="@+id/level"
+        android:layout_alignEnd="@+id/level" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="→"
+        android:id="@+id/nextPage"
+        android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
+        android:background="@color/blue"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_alignTop="@+id/mission4"
+        android:layout_toRightOf="@+id/page"
+        android:layout_toEndOf="@+id/page" />
 
 </RelativeLayout>

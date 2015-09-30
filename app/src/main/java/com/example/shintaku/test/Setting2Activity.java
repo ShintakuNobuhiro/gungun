@@ -14,12 +14,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 //課題小項目選択
 public class Setting2Activity extends AppCompatActivity {
     int level = 1; //現在の閲覧レベル
     int lvlMin = 1; //最低
     int lvlMax = 4; //最高
-    final String description[] = new String[5];
+    int page = 1; // ページ
+    final int firstPage = 1; //初期ページ
+    ArrayList<String> description = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,9 +57,9 @@ public class Setting2Activity extends AppCompatActivity {
         });
 
         //レベル上げ
-        Button next = (Button) findViewById(R.id.next);
+        Button nextLevel = (Button) findViewById(R.id.nextLevel);
         final TextView levelTxt = (TextView) findViewById(R.id.level);
-        next.setOnClickListener(new View.OnClickListener() {
+        nextLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (level < lvlMax) {
@@ -65,13 +69,14 @@ public class Setting2Activity extends AppCompatActivity {
                 }
                 Log.d("lv", String.valueOf(level));
                 levelTxt.setText("レベル" + String.valueOf(level));
-                jsonSetText(category,level,0);
+                page = firstPage;
+                jsonSetText(category, level, page);
             }
         });
 
         //レベル下げ
-        Button prev = (Button) findViewById(R.id.prev);
-        prev.setOnClickListener(new View.OnClickListener() {
+        Button prevLevel = (Button) findViewById(R.id.prevLevel);
+        prevLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(level>lvlMin) {
@@ -81,7 +86,33 @@ public class Setting2Activity extends AppCompatActivity {
                 }
                 Log.d("lv", String.valueOf(level));
                 levelTxt.setText("レベル" + String.valueOf(level));
-                jsonSetText(category,level,0);
+                page = firstPage;
+                jsonSetText(category,level,page);
+            }
+        });
+
+        Button nextPage = (Button) findViewById(R.id.nextPage);
+        final TextView pageTxt = (TextView) findViewById(R.id.page);
+        nextPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page++;
+                Log.d("page", String.valueOf(page));
+                pageTxt.setText("ページ" + String.valueOf(page));
+                jsonSetText(category,level,page);
+            }
+        });
+
+        Button prevPage = (Button) findViewById(R.id.prevPage);
+        prevPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(page > 1) {
+                    page--;
+                }
+                Log.d("page", String.valueOf(page));
+                pageTxt.setText("ページ" + String.valueOf(page));
+                jsonSetText(category,level,page);
             }
         });
 
@@ -122,20 +153,13 @@ public class Setting2Activity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public String URI(int cat,int lvl){
-        String tmp = null;
-        if(cat == 1) {
-            tmp = "https://railstutorial-ukyankyan-1.c9.io/missions/health/"+lvl+".json";
-        } else if (cat == 2) {
-            tmp = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+lvl+".json";
-        } else {
-            Log.d("error","error");
-        }
-        return tmp;
-    }
-    public void jsonSetText(int cat,int lvl, int i) {
+
+    public void jsonSetText(int cat,int lvl, final int p) {
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {
+                for(int i = description.size()-1; i>=0; i--) {
+                    description.remove(i);
+                }
             }
             public void onProgressUpdate(int progress) {
             }
@@ -149,8 +173,8 @@ public class Setting2Activity extends AppCompatActivity {
                     //mission分解、説明の配列化
                     for (int i = 0; i < missions.length(); i++) {
                         JSONObject mission = missions.getJSONObject(i);
-                        description[i] = mission.getString("description");
-                        Log.d("description",i+","+description[i]);
+                        description.add(mission.getString("description"));
+                        Log.d("description",i+","+description.get(i));
                     }
 
                     //missionの表示
@@ -158,7 +182,14 @@ public class Setting2Activity extends AppCompatActivity {
                     final Button button[] =new Button[id.length];
                     for(int i = 0; i < id.length; i++) {
                         button[i] = (Button) findViewById(id[i]);
-                        button[i].setText(description[i]);
+                        int tmp = (page-1)*id.length + i;
+                        if(tmp < description.size() && tmp >= 0) {
+                            Log.d("tmp", String.valueOf(tmp)+ "," + String.valueOf(i));
+                            button[i].setText(description.get(tmp));
+                        } else {
+                            button[i].setText("empty");
+                        }
+
                     }
                 } catch (JSONException e) {
                     Log.e("error",e.toString());
@@ -168,7 +199,15 @@ public class Setting2Activity extends AppCompatActivity {
             public void onCancelled() {
             }
         });
-        asyncGet.execute(URI(cat,lvl));
+        String URL = null;
+        if(cat == 1) {
+            URL = "https://railstutorial-ukyankyan-1.c9.io/missions/health/"+lvl+".json";
+        } else if (cat == 2) {
+            URL = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+lvl+".json";
+        } else {
+            Log.e("error","error");
+        }
+        asyncGet.execute(URL);
     }
 }
 
