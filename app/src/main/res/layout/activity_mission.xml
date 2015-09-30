@@ -19,7 +19,7 @@
         android:layout_toStartOf="@+id/checkButton2"
         android:layout_alignBottom="@+id/checkButton2"
         android:checked="false"
-        android:background="@color/lightblue" />
+        android:background="@color/blue" />
 
     <Button
         android:layout_width="wrap_content"
