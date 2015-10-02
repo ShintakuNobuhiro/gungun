@@ -16,15 +16,23 @@ import org.json.JSONObject;
 //チェック画面
 public class MissionActivity extends AppCompatActivity {
 
+    boolean clear[] = new boolean[4]; //達成状況の保存
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mission);
         final String description[] = new String[4];
-        final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4,};
+        final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
+        final int[] chkOn = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.orange), getResources().getColor(R.color.red)};
+        final int[] chkOff = new int[]{getResources().getColor(R.color.lightblue), getResources().getColor(R.color.lightgreen), getResources().getColor(R.color.lightorange), getResources().getColor(R.color.lightred)};
+
         final Button chkBtn[] = new Button[id.length];
         for(int i=0; i<id.length;i++){
             chkBtn[i] = (Button) findViewById(id[i]);
+            clear[i] = false;
+            chkBtn[i].setBackgroundColor(chkOff[i]);
+            chkBtn[i].setTextColor(getResources().getColor(R.color.black));
         }
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {
@@ -54,13 +62,24 @@ public class MissionActivity extends AppCompatActivity {
         });
         asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/users/1.json");
 
-        chkBtn[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int color = getResources().getColor(R.color.blue);
-                chkBtn[0].setBackgroundColor(color);
-            }
-        });
+        for(int i = 0; i < id.length; i++) {
+            final int finalI = i;
+            chkBtn[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (clear[finalI] == false) {
+                        clear[finalI] = true;
+                        chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
+                        chkBtn[finalI].setTextColor(getResources().getColor(R.color.white));
+                    } else {
+                        clear[finalI] = false;
+                        chkBtn[finalI].setBackgroundColor(chkOff[finalI]);
+                        chkBtn[finalI].setTextColor(getResources().getColor(R.color.black));
+                    }
+                    Log.d(String.valueOf(finalI),String.valueOf(clear[finalI]));
+                }
+            });
+        }
         Button btnNext = (Button) this.findViewById(R.id.button2);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override

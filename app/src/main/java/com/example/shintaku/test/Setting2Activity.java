@@ -14,69 +14,35 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 //課題小項目選択
 public class Setting2Activity extends AppCompatActivity {
-    int level = 1;
-    int lvlMin = 1;
-    int lvlMax = 4;
+    int level = 1; //現在の閲覧レベル
+    int lvlMin = 1; //最低
+    int lvlMax = 4; //最高
+    final int firstPage = 1; //初期ページ
+    int page = firstPage;
+    ArrayList<String> description = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting2);
-        final String[] URL = {null};
 
         //大項目名表示
         Settings tr = (Settings) getIntent().getSerializableExtra("test_result");//大項目名のインテント間引き継ぎ
         TextView a = (TextView)this.findViewById(R.id.textView);
         final int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
 
-        if(category == 1) {
-            a.setText("健康");
-        } else if (category == 2) {
-            a.setText("お友達/あいさつ");
-            URL[0] = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+level+".json";
+        if(category >= 0 || category <= 3) {
+            final int id []= {R.string.genre1, R.string.genre2, R.string.genre3, R.string.genre4};
+            a.setText(id[category-1]);
         } else {
             a.setText("error");
         }
-        URL[0] = URI(category,level);
 
-        final String description[] = new String[5];
         final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
-        ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
-            public void onPreExecute() {
-            }
-            public void onProgressUpdate(int progress) {
-            }
-            public void onPostExecute(final String result) {
-                Log.d("start", result);
-                try {
-                    //パース準備
-                    JSONObject json = new JSONObject(result);
-                    JSONArray missions = json.getJSONArray("missions");
-
-                    //mission分解、説明の配列化
-                    for (int i = 0; i < missions.length(); i++) {
-                        JSONObject mission = missions.getJSONObject(i);
-                        description[i] = mission.getString("description");
-                        Log.d("description",i+","+description[i]);
-                    }
-
-                    //missionの表示
-                    final Button button[] =new Button[id.length];
-                    for(int i = 0; i < id.length; i++) {
-                        button[i] = (Button) findViewById(id[i]);
-                        button[i].setText(description[i]);
-
-                    }
-                } catch (JSONException e) {
-                    Log.e("error",e.toString());
-                    e.printStackTrace();
-                }
-            }
-            public void onCancelled() {
-            }
-        });
-        asyncGet.execute(URL[0]);
+        jsonSetText(category,level,page);
 
         //戻るボタン
         Button btn = (Button) findViewById(R.id.button5);
@@ -90,61 +56,27 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
 
-        Button next = (Button) findViewById(R.id.next);
+        //レベル上げ
+        Button nextLevel = (Button) findViewById(R.id.nextLevel);
         final TextView levelTxt = (TextView) findViewById(R.id.level);
-        next.setOnClickListener(new View.OnClickListener() {
+        nextLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(level<lvlMax) {
+                if (level < lvlMax) {
                     level++;
                 } else {
                     level = lvlMin;
                 }
                 Log.d("lv", String.valueOf(level));
                 levelTxt.setText("レベル" + String.valueOf(level));
-
-                ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
-                    public void onPreExecute() {
-                    }
-                    public void onProgressUpdate(int progress) {
-                    }
-                    public void onPostExecute(final String result) {
-                        Log.d("start", result);
-                        try {
-                            //パース準備
-                            JSONObject json = new JSONObject(result);
-                            JSONArray missions = json.getJSONArray("missions");
-
-                            //mission分解、説明の配列化
-                            for (int i = 0; i < missions.length(); i++) {
-                                JSONObject mission = missions.getJSONObject(i);
-                                description[i] = mission.getString("description");
-                                Log.d("description",i+","+description[i]);
-                            }
-
-                            //missionの表示
-                            final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
-                            final Button button[] =new Button[id.length];
-                            for(int i = 0; i < id.length; i++) {
-                                button[i] = (Button) findViewById(id[i]);
-                                button[i].setText(description[i]);
-
-                            }
-                        } catch (JSONException e) {
-                            Log.e("error",e.toString());
-                            e.printStackTrace();
-                        }
-                    }
-                    public void onCancelled() {
-                    }
-                });
-                URL[0] = URI(category,level);
-                asyncGet.execute(URL[0]);
+                page = firstPage;
+                jsonSetText(category, level, page);
             }
         });
 
-        Button prev = (Button) findViewById(R.id.prev);
-        prev.setOnClickListener(new View.OnClickListener() {
+        //レベル下げ
+        Button prevLevel = (Button) findViewById(R.id.prevLevel);
+        prevLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(level>lvlMin) {
@@ -153,44 +85,36 @@ public class Setting2Activity extends AppCompatActivity {
                     level = lvlMax;
                 }
                 Log.d("lv", String.valueOf(level));
-                levelTxt.setText("レベル"+String.valueOf(level));
+                levelTxt.setText("レベル" + String.valueOf(level));
+                page = firstPage;
+                jsonSetText(category,level,page);
+            }
+        });
 
-                ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
-                    public void onPreExecute() {
-                    }
-                    public void onProgressUpdate(int progress) {
-                    }
-                    public void onPostExecute(final String result) {
-                        Log.d("start", result);
-                        try {
-                            //パース準備
-                            JSONObject json = new JSONObject(result);
-                            JSONArray missions = json.getJSONArray("missions");
+        //ページ送り
+        Button nextPage = (Button) findViewById(R.id.nextPage);
+        final TextView pageTxt = (TextView) findViewById(R.id.page);
+        nextPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page++;
+                Log.d("page", String.valueOf(page));
+                pageTxt.setText("ページ" + String.valueOf(page));
+                jsonSetText(category,level,page);
+            }
+        });
 
-                            //mission分解、説明の配列化
-                            for (int i = 0; i < missions.length(); i++) {
-                                JSONObject mission = missions.getJSONObject(i);
-                                description[i] = mission.getString("description");
-                                Log.d("description",i+","+description[i]);
-                            }
-
-                            //missionの表示
-                            final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
-                            final Button button[] =new Button[id.length];
-                            for(int i = 0; i < id.length; i++) {
-                                button[i] = (Button) findViewById(id[i]);
-                                button[i].setText(description[i]);
-                            }
-                        } catch (JSONException e) {
-                            Log.e("error",e.toString());
-                            e.printStackTrace();
-                        }
-                    }
-                    public void onCancelled() {
-                    }
-                });
-                URL[0] = URI(category,level);
-                asyncGet.execute(URL[0]);
+        //ページ戻し
+        Button prevPage = (Button) findViewById(R.id.prevPage);
+        prevPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(page > 1) {
+                    page--;
+                }
+                Log.d("page", String.valueOf(page));
+                pageTxt.setText("ページ" + String.valueOf(page));
+                jsonSetText(category,level,page);
             }
         });
 
@@ -231,16 +155,61 @@ public class Setting2Activity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public String URI(int cat,int lvl){
-        String tmp = null;
+
+    public void jsonSetText(int cat,int lvl, final int p) {
+        ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
+            public void onPreExecute() {
+                for(int i = description.size()-1; i>=0; i--) {
+                    description.remove(i);
+                }
+            }
+            public void onProgressUpdate(int progress) {
+            }
+            public void onPostExecute(final String result) {
+                Log.d("start", result);
+                try {
+                    //パース準備
+                    JSONObject json = new JSONObject(result);
+                    JSONArray missions = json.getJSONArray("missions");
+
+                    //mission分解、説明の配列化
+                    for (int i = 0; i < missions.length(); i++) {
+                        JSONObject mission = missions.getJSONObject(i);
+                        description.add(mission.getString("description"));
+                        Log.d("description",i+","+description.get(i));
+                    }
+
+                    //missionの表示
+                    final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
+                    final Button button[] =new Button[id.length];
+                    for(int i = 0; i < id.length; i++) {
+                        button[i] = (Button) findViewById(id[i]);
+                        int tmp = (page-1)*id.length + i;
+                        if(tmp < description.size() && tmp >= 0) {
+                            Log.d("tmp", String.valueOf(tmp)+ "," + String.valueOf(i));
+                            button[i].setText(description.get(tmp));
+                        } else {
+                            button[i].setText("empty");
+                        }
+
+                    }
+                } catch (JSONException e) {
+                    Log.e("error",e.toString());
+                    e.printStackTrace();
+                }
+            }
+            public void onCancelled() {
+            }
+        });
+        String URL = null;
         if(cat == 1) {
-            tmp = "https://railstutorial-ukyankyan-1.c9.io/missions/health/"+lvl+".json";
+            URL = "https://railstutorial-ukyankyan-1.c9.io/missions/health/"+lvl+".json";
         } else if (cat == 2) {
-            tmp = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+lvl+".json";
+            URL = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+lvl+".json";
         } else {
-            Log.d("error","error");
+            Log.e("error","error");
         }
-        return tmp;
+        asyncGet.execute(URL);
     }
 }
 

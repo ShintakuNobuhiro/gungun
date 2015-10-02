@@ -129,4 +129,87 @@
         android:layout_marginLeft="60dp"
         android:layout_marginStart="60dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/genre1"
+        android:id="@+id/textView3"
+        android:layout_marginTop="11dp"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/genre2"
+        android:id="@+id/textView5"
+        android:layout_alignLeft="@+id/progressBar2"
+        android:layout_alignStart="@+id/progressBar2"
+        android:layout_above="@+id/progressBar2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/genre3"
+        android:id="@+id/textView6"
+        android:layout_alignBaseline="@+id/LevelView3"
+        android:layout_alignBottom="@+id/LevelView3"
+        android:layout_alignLeft="@+id/progressBar3"
+        android:layout_alignStart="@+id/progressBar3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/genre4"
+        android:id="@+id/textView7"
+        android:layout_alignBaseline="@+id/LevelView4"
+        android:layout_alignBottom="@+id/LevelView4"
+        android:layout_alignLeft="@+id/progressBar4"
+        android:layout_alignStart="@+id/progressBar4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="レベル1"
+        android:id="@+id/LevelView1"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_alignRight="@+id/progressBar"
+        android:layout_alignEnd="@+id/progressBar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="レベル2"
+        android:id="@+id/LevelView2"
+        android:layout_above="@+id/progressBar2"
+        android:layout_alignRight="@+id/progressBar2"
+        android:layout_alignEnd="@+id/progressBar2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="レベル1"
+        android:id="@+id/LevelView3"
+        android:layout_above="@+id/progressBar3"
+        android:layout_alignRight="@+id/progressBar3"
+        android:layout_alignEnd="@+id/progressBar3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="レベル1"
+        android:id="@+id/LevelView4"
+        android:layout_above="@+id/progressBar4"
+        android:layout_alignRight="@+id/progressBar4"
+        android:layout_alignEnd="@+id/progressBar4" />
+
 </RelativeLayout>

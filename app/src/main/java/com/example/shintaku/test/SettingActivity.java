@@ -64,14 +64,13 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
-        btn = (Button) this.findViewById(R.id.checkButton3); //お友達・あいさつ
+        btn = (Button) this.findViewById(R.id.checkButton2); //お友達・あいさつ
         final Button finalBtn1 = btn;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String txt="2";
                 Settings text = new Settings(txt);
-
                 finalBtn1.setText(description[1]);
 
                 Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);
@@ -80,11 +79,12 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+
+        //決定
         btn = (Button) this.findViewById(R.id.button3);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //トップ画面に戻る実装
                 Intent intent = new Intent(SettingActivity.this, LevelActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

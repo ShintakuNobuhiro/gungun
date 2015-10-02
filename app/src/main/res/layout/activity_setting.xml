@@ -10,20 +10,18 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="健康"
+        android:text="@string/genre1"
         android:id="@+id/checkButton"
         android:checked="false"
         android:background="@color/blue"
-        android:textSize="40dp"
+        android:textSize="35dp"
         android:height="300dp"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/checkButton3"
-        android:layout_alignStart="@+id/checkButton3"
-        android:layout_toLeftOf="@+id/checkButton2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/checkButton2"
         android:layout_above="@+id/checkButton3"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentEnd="false" />
+        android:layout_toLeftOf="@+id/checkButton2" />
 
     <Button
         android:layout_width="wrap_content"
@@ -32,53 +30,51 @@
         android:width="300dp"
         android:height="250dp"
         android:background="@color/green"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:text="運動とお仕事"
-        android:clickable="false"
-        android:enabled="false"
-        android:layout_alignTop="@+id/checkButton"
-        android:layout_above="@+id/checkButton3" />
+        android:text="@string/genre2"
+        android:textSize="35dp"
+        android:layout_toRightOf="@+id/checkButton3"
+        android:layout_toEndOf="@+id/checkButton3"
+        android:layout_alignBottom="@+id/checkButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="お友達/あいさつ"
+        android:text="@string/genre3"
         android:id="@+id/checkButton3"
         android:width="300dp"
         android:height="250dp"
         android:background="@color/orange"
-        android:layout_toLeftOf="@+id/checkButton4"
-        android:layout_toStartOf="@+id/checkButton4"
-        android:textSize="40dp"
-        android:layout_alignParentBottom="true" />
+        android:clickable="false"
+        android:enabled="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="暮らし"
+        android:text="@string/genre4"
         android:id="@+id/checkButton4"
         android:width="300dp"
         android:height="250dp"
         android:background="@color/red"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:enabled="false"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/checkButton2" />
+        android:layout_toRightOf="@+id/checkButton3"
+        android:layout_toEndOf="@+id/checkButton3" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="戻る"
+        android:text="決定"
         android:id="@+id/button3"
         android:width="200dp"
         android:height="100dp"
         android:textSize="50dp"
         android:background="@color/blue"
-        android:layout_alignBottom="@+id/checkButton3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>
