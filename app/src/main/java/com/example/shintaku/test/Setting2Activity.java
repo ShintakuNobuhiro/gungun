@@ -1,5 +1,6 @@
 package com.example.shintaku.test;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,10 +34,10 @@ public class Setting2Activity extends AppCompatActivity {
         Settings tr = (Settings) getIntent().getSerializableExtra("genre");//大項目名のインテント間引き継ぎ
         TextView a = (TextView)this.findViewById(R.id.textView);
         final int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
+        final String genre[]= {getString(R.string.genre1), getString(R.string.genre2), getString(R.string.genre3), getString(R.string.genre4)};
 
         if(category >= 0 || category <= 3) {
-            final int id []= {R.string.genre1, R.string.genre2, R.string.genre3, R.string.genre4};
-            a.setText(id[category-1]);
+            a.setText(genre[category]);
         } else {
             a.setText("error");
         }
@@ -97,7 +98,6 @@ public class Setting2Activity extends AppCompatActivity {
 
         //ページ送り
         Button nextPage = (Button) findViewById(R.id.nextPage);
-
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,11 +132,12 @@ public class Setting2Activity extends AppCompatActivity {
                     Intent intent = new Intent(Setting2Activity.this, SettingActivity.class);
                     String text = mission[finalI].getText().toString();
 
-                    intent.putExtra("健康", text);
-                    Log.d("text",text);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
+                    intent.putExtra(String.valueOf(genre[category]), text);
+                    Log.d("text", String.valueOf(genre[category])+text);
+                    // 返却したい結果ステータスをセットする
+                    setResult(Activity.RESULT_OK, intent);
+                    // アクティビティを終了させる
+                    finish();
                 }
             });
         }
@@ -211,9 +212,9 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
         String URL = null;
-        if(cat == 1) {
+        if(cat == 0) {
             URL = "https://railstutorial-ukyankyan-1.c9.io/missions/health/"+lvl+".json";
-        } else if (cat == 2) {
+        } else if (cat == 1) {
             URL = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+lvl+".json";
         } else {
             Log.e("error","error");

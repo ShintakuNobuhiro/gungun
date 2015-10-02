@@ -1,5 +1,6 @@
 package com.example.shintaku.test;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -53,12 +54,15 @@ public class SettingActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txt = "1";
+                String txt = "0";
                 Settings text = new Settings(txt);
 
                 Intent intent = new Intent(SettingActivity.this, Setting2Activity.class);
                 intent.putExtra("genre", text);
-                startActivity(intent);
+                // 遷移先から返却されてくる際の識別コード
+                int requestCode = 1001;
+                // 返却値を考慮したActivityの起動を行う
+                startActivityForResult(intent, requestCode);
 
             }
         });
@@ -67,12 +71,15 @@ public class SettingActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txt="2";
+                String txt="1";
                 Settings text = new Settings(txt);
 
                 Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);
                 intent.putExtra("genre", text);
-                startActivity(intent);
+                // 遷移先から返却されてくる際の識別コード
+                int requestCode = 1001;
+                // 返却値を考慮したActivityの起動を行う
+                startActivityForResult(intent, requestCode);
             }
         });
 
@@ -88,23 +95,6 @@ public class SettingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("onResume","resume");
-        Settings tr = null;
-        int setDescription = -1;
-        Intent intent = getIntent();
-        if(intent.getSerializableExtra("健康") != null) {
-            tr = (Settings) intent.getSerializableExtra("健康");//小項目名のインテント間引き継ぎ
-            setDescription = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
-            Button btn = (Button) findViewById(R.id.checkButton);
-            btn.setText(setDescription);
-        } else {
-            Log.e("intent_error","error");
-        }
     }
 
     @Override
@@ -127,5 +117,31 @@ public class SettingActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
+        // startActivityForResult()の際に指定した識別コードとの比較
+        if( requestCode == 1001 ){
+            // 返却結果ステータスとの比較
+            if( resultCode == Activity.RESULT_OK ) {
+                // 返却されてきたintentから値を取り出す
+                String str[] = new String[4];
+                Button btn;
+                if (intent.getStringExtra("健康") != null) {
+                    str[0] = intent.getStringExtra("健康");
+                    Log.d("健康",str[0]);
+                    btn = (Button) findViewById(R.id.checkButton);
+                    btn.setText(str[0]);
+                }
+                if (intent.getStringExtra("お友達/あいさつ") != null) {
+                    str[1] = intent.getStringExtra("お友達/あいさつ");
+                    Log.d("お友達/あいさつ",str[1]);
+                    btn = (Button) findViewById(R.id.checkButton2);
+                    btn.setText(str[1]);
+                } else {
+                    Log.e("お友達あいさつ","error");
+                }
+            }
+        }
     }
 }
