@@ -3,7 +3,7 @@ package com.example.shintaku.test;
 import java.io.Serializable;
 
 public class Settings implements Serializable {
-    String text = "ジャンル";
+    String text = "";
 
     enum subject{
         TEXT

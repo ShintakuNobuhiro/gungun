@@ -30,7 +30,7 @@ public class Setting2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_setting2);
 
         //大項目名表示
-        Settings tr = (Settings) getIntent().getSerializableExtra("test_result");//大項目名のインテント間引き継ぎ
+        Settings tr = (Settings) getIntent().getSerializableExtra("genre");//大項目名のインテント間引き継ぎ
         TextView a = (TextView)this.findViewById(R.id.textView);
         final int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
 
@@ -56,6 +56,8 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
 
+        final TextView pageTxt = (TextView) findViewById(R.id.page);
+
         //レベル上げ
         Button nextLevel = (Button) findViewById(R.id.nextLevel);
         final TextView levelTxt = (TextView) findViewById(R.id.level);
@@ -70,6 +72,7 @@ public class Setting2Activity extends AppCompatActivity {
                 Log.d("lv", String.valueOf(level));
                 levelTxt.setText("レベル" + String.valueOf(level));
                 page = firstPage;
+                pageTxt.setText("ページ" + String.valueOf(page));
                 jsonSetText(category, level, page);
             }
         });
@@ -87,13 +90,14 @@ public class Setting2Activity extends AppCompatActivity {
                 Log.d("lv", String.valueOf(level));
                 levelTxt.setText("レベル" + String.valueOf(level));
                 page = firstPage;
-                jsonSetText(category,level,page);
+                pageTxt.setText("ページ"+ String.valueOf(page));
+                jsonSetText(category, level, page);
             }
         });
 
         //ページ送り
         Button nextPage = (Button) findViewById(R.id.nextPage);
-        final TextView pageTxt = (TextView) findViewById(R.id.page);
+
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,13 +122,18 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
 
-        Button mission[] = new Button[id.length];
+        final Button mission[] = new Button[id.length];
         for(int i=0; i<id.length; i++) {
             mission[i] = (Button) findViewById(id[i]);
+            final int finalI = i;
             mission[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Setting2Activity.this, SettingActivity.class);
+                    String text = mission[finalI].getText().toString();
+
+                    intent.putExtra("健康", text);
+                    Log.d("text",text);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
@@ -176,7 +185,7 @@ public class Setting2Activity extends AppCompatActivity {
                     for (int i = 0; i < missions.length(); i++) {
                         JSONObject mission = missions.getJSONObject(i);
                         description.add(mission.getString("description"));
-                        Log.d("description",i+","+description.get(i));
+                        //Log.d("description",i+","+description.get(i));
                     }
 
                     //missionの表示
@@ -186,7 +195,7 @@ public class Setting2Activity extends AppCompatActivity {
                         button[i] = (Button) findViewById(id[i]);
                         int tmp = (page-1)*id.length + i;
                         if(tmp < description.size() && tmp >= 0) {
-                            Log.d("tmp", String.valueOf(tmp)+ "," + String.valueOf(i));
+                            //Log.d("tmp", String.valueOf(tmp)+ "," + String.valueOf(i));
                             button[i].setText(description.get(tmp));
                         } else {
                             button[i].setText("empty");

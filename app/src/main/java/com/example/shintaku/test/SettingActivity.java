@@ -20,7 +20,6 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         final String[] description = new String[2];
-        Settings tr = (Settings) getIntent().getSerializableExtra("test_result");//大項目名のインテント間引き継ぎ
 
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {
@@ -56,10 +55,9 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String txt = "1";
                 Settings text = new Settings(txt);
-                finalBtn.setText(description[0]);
 
                 Intent intent = new Intent(SettingActivity.this, Setting2Activity.class);
-                intent.putExtra("test_result", text);
+                intent.putExtra("genre", text);
                 startActivity(intent);
 
             }
@@ -71,10 +69,9 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String txt="2";
                 Settings text = new Settings(txt);
-                finalBtn1.setText(description[1]);
 
                 Intent intent = new Intent(getApplicationContext(), Setting2Activity.class);
-                intent.putExtra("test_result", text);
+                intent.putExtra("genre", text);
                 startActivity(intent);
             }
         });
@@ -91,6 +88,23 @@ public class SettingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("onResume","resume");
+        Settings tr = null;
+        int setDescription = -1;
+        Intent intent = getIntent();
+        if(intent.getSerializableExtra("健康") != null) {
+            tr = (Settings) intent.getSerializableExtra("健康");//小項目名のインテント間引き継ぎ
+            setDescription = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
+            Button btn = (Button) findViewById(R.id.checkButton);
+            btn.setText(setDescription);
+        } else {
+            Log.e("intent_error","error");
+        }
     }
 
     @Override

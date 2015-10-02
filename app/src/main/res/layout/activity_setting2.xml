@@ -140,14 +140,13 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="レベル1"
         android:id="@+id/level"
-        android:background="@color/blue"
-        android:textColor="@color/white"
         android:layout_toRightOf="@+id/prevLevel"
         android:layout_toStartOf="@+id/nextLevel"
         android:gravity="center"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:layout_alignBottom="@+id/mission3"
-        android:layout_alignTop="@+id/prevLevel" />
+        android:layout_alignTop="@+id/prevLevel"
+        android:textColor="@color/black" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -169,15 +168,14 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="ページ1"
         android:id="@+id/page"
-        android:background="@color/blue"
-        android:textColor="@color/white"
         android:gravity="center"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:layout_alignTop="@+id/prevPage"
         android:layout_toRightOf="@+id/prevPage"
         android:layout_alignBottom="@+id/prevPage"
         android:layout_alignRight="@+id/level"
-        android:layout_alignEnd="@+id/level" />
+        android:layout_alignEnd="@+id/level"
+        android:textColor="@color/black" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
