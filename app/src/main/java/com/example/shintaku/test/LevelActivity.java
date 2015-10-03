@@ -22,6 +22,12 @@ public class LevelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
+        // ADD-S 2015/07/28 for read NFC
+        // NFC-ID情報を表示する
+        String nfcId = NfcActivity.nfcIdInfo;
+        Log.d("nfc",nfcId);
+        // ADD-E 2015/07/28 for read NFC
+
         //非同期処理
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {
