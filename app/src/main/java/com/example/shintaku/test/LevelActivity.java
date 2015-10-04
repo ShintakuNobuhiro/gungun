@@ -2,6 +2,7 @@ package com.example.shintaku.test;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -15,8 +16,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 //トップ画面
 public class LevelActivity extends AppCompatActivity {
+    private int count[] = {0,0};
+    private int maxCount[] = {0,0};
+
+    ProgressBar prog[] = new ProgressBar[2];
+
+    private MyTimerTask timerTask = null;
+    private Timer timer = null;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +38,7 @@ public class LevelActivity extends AppCompatActivity {
         // NFC-ID情報を表示する
         String nfcId = NfcActivity.nfcIdInfo;
         Log.d("nfc",nfcId);
-        // ADD-E 2015/07/28 for read NFC
+
 
         //非同期処理
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
@@ -55,20 +67,28 @@ public class LevelActivity extends AppCompatActivity {
                     final TextView nameTxt = (TextView) findViewById(R.id.name);
                     name[0] = json.getString("name");
                     nameTxt.setText(name[0]);
-                    Log.d("name", name[0]);
 
                     //プログレスバーの伸び率設定等
                     int id[] = {R.id.progressBar,R.id.progressBar2,R.id.progressBar3,R.id.progressBar4};
                     ProgressBar progressBar[] = new ProgressBar[id.length];
                     for (int i = 0; i < statuses.length(); i++) {
-                        Log.d("exp", exp[i]);
+                        Log.d("statues", String.valueOf(i));
                         progressBar[i] = (ProgressBar) findViewById(id[i]);
                         progressBar[i].setMax(Integer.parseInt(next[i])); // 水平プログレスバーの最大値を設定
-                        progressBar[i].setProgress(Integer.parseInt(exp[i])); // 水平プログレスバーの値を設定
-                        progressBar[i].setSecondaryProgress(60); // 水平プログレスバーのセカンダリ値を設定
+                        Log.d("max", String.valueOf(progressBar[i].getMax()));
+
+                        // タイマーインスタンスを作成
+                        timer = new Timer();
+                        // タイマータスクインスタンスを作成
+                        timerTask = new MyTimerTask();
+                        // タイマースケジュールを設定
+                        timer.schedule(timerTask, 0, 3);
+                        // カウンタを初期化して設定
+                        prog[i] = progressBar[i];
+                        maxCount[i] = Integer.parseInt(exp[i]);
                     }
                 } catch (JSONException e) { //JSONObject等例外発生時
-                    Log.e("error",e.toString());
+                    Log.e("error", e.toString());
                     e.printStackTrace();
                 }
             }
@@ -126,5 +146,23 @@ public class LevelActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // タイマータスク用のクラス
+    class MyTimerTask extends TimerTask {
+
+        @Override
+        public void run() {
+            handler.post( new Runnable() {
+                public void run() {
+                    for(int i = 0; i < count.length; i++) {
+                        if (count[i] < maxCount[i]) {
+                            count[i]++;
+                            prog[i].setProgress(count[i]);
+                        }
+                    }
+                }
+            });
+        }
     }
 }

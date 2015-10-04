@@ -16,11 +16,14 @@ import org.json.JSONObject;
 
 //課題大項目選択画面
 public class SettingActivity extends AppCompatActivity {
+    final String str[] = new String[4];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         final String[] description = new String[2];
+
 
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {
@@ -92,6 +95,8 @@ public class SettingActivity extends AppCompatActivity {
                 Intent intent = new Intent(SettingActivity.this, LevelActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                ASyncPost post = new ASyncPost();
+                post.execute("1", str[0], str[1]);
                 startActivity(intent);
             }
         });
@@ -125,7 +130,7 @@ public class SettingActivity extends AppCompatActivity {
             // 返却結果ステータスとの比較
             if( resultCode == Activity.RESULT_OK ) {
                 // 返却されてきたintentから値を取り出す
-                String str[] = new String[4];
+
                 Button btn;
                 if (intent.getStringExtra("健康") != null) {
                     str[0] = intent.getStringExtra("健康");
