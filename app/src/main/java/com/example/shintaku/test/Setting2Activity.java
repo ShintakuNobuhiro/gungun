@@ -166,7 +166,7 @@ public class Setting2Activity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void jsonSetText(int cat,int lvl, final int p) {
+    public void jsonSetText(int cat, final int lvl, final int p) {
         ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
             public void onPreExecute() {
                 for(int i = description.size()-1; i>=0; i--) {
@@ -180,7 +180,9 @@ public class Setting2Activity extends AppCompatActivity {
                 try {
                     //パース準備
                     JSONObject json = new JSONObject(result);
-                    JSONArray missions = json.getJSONArray("missions");
+                    JSONObject missionObject = json.getJSONObject("levels");
+                    Log.d("test", String.valueOf(missionObject));
+                    JSONArray missions = missionObject.getJSONArray("missions");
 
                     //mission分解、説明の配列化
                     for (int i = 0; i < missions.length(); i++) {
@@ -212,10 +214,8 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
         String URL = null;
-        if(cat == 0) {
-            URL = "https://railstutorial-ukyankyan-1.c9.io/missions/health/"+lvl+".json";
-        } else if (cat == 1) {
-            URL = "https://railstutorial-ukyankyan-1.c9.io/missions/friend/"+lvl+".json";
+        if(cat == 0 || cat ==1) {
+            URL = "https://railstutorial-ukyankyan-1.c9.io/category/"+cat+".json";
         } else {
             Log.e("error","error");
         }

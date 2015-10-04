@@ -10,10 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 //課題大項目選択画面
 public class SettingActivity extends AppCompatActivity {
     final String str[] = new String[4];
@@ -23,34 +19,6 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         final String[] description = new String[2];
-
-
-        ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
-            public void onPreExecute() {
-            }
-            public void onProgressUpdate(int progress) {
-            }
-            public void onPostExecute(final String result) {
-                Log.d("start",result);
-                try {
-                    //パース準備
-                    JSONObject json = new JSONObject(result);
-                    JSONArray missions = json.getJSONArray("missions");
-
-                    //mission分解、説明の配列化
-                    for (int i = 0; i < missions.length(); i++) {
-                        JSONObject mission = missions.getJSONObject(i);
-                        description[i] = mission.getString("description");
-                    }
-                } catch (JSONException e) {
-                    Log.e("error",e.toString());
-                    e.printStackTrace();
-                }
-            }
-            public void onCancelled() {
-            }
-        });
-        asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/users/1.json");
 
         Button btn = (Button) this.findViewById(R.id.checkButton); //健康
         final Button finalBtn = btn;
