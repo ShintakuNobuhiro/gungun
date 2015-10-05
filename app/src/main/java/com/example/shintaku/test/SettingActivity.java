@@ -13,6 +13,7 @@ import android.widget.Button;
 //課題大項目選択画面
 public class SettingActivity extends AppCompatActivity {
     final String str[] = new String[4];
+    final int[] mission_id = new int[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,18 +103,22 @@ public class SettingActivity extends AppCompatActivity {
                 Button btn;
                 if (intent.getStringExtra("健康") != null) {
                     str[0] = intent.getStringExtra("健康");
-                    Log.d("健康",str[0]);
                     btn = (Button) findViewById(R.id.checkButton);
+                    mission_id[0] = Integer.parseInt(intent.getStringExtra("id"));
+                    Log.d("健康",str[0]+","+mission_id[0]);
                     btn.setText(str[0]);
                 }
-                if (intent.getStringExtra("お友達/あいさつ") != null) {
+                else if (intent.getStringExtra("お友達/あいさつ") != null) {
                     str[1] = intent.getStringExtra("お友達/あいさつ");
-                    Log.d("お友達/あいさつ",str[1]);
                     btn = (Button) findViewById(R.id.checkButton2);
                     btn.setText(str[1]);
+                    mission_id[1] = Integer.parseInt(intent.getStringExtra("id"));
+                    Log.d("健康",str[1]+","+mission_id[1]);
                 } else {
-                    Log.e("お友達あいさつ","error");
+                    Log.e("Genre","error");
                 }
+            } else {
+                Log.e("error","requestCode Unmatched");
             }
         }
     }
