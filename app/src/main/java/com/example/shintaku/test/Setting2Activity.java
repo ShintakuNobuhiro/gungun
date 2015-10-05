@@ -182,7 +182,7 @@ public class Setting2Activity extends AppCompatActivity {
                     JSONObject json = new JSONObject(result);
                     JSONObject missionObject = json.getJSONObject("levels");
                     Log.d("test", String.valueOf(missionObject));
-                    JSONArray missions = missionObject.getJSONArray("missions");
+                    JSONArray missions = missionObject.getJSONArray("1");
 
                     //mission分解、説明の配列化
                     for (int i = 0; i < missions.length(); i++) {

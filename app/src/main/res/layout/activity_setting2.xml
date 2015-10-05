@@ -49,7 +49,8 @@
         android:width="600dp"
         android:height="65dp"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
-        android:background="@color/blue" />
+        android:background="@color/blue"
+        android:textSize="35dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -62,7 +63,8 @@
         android:background="@color/blue"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/mission1"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="40dp"
+        android:textSize="35dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -76,7 +78,8 @@
         android:layout_below="@+id/mission2"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="40dp"
+        android:textSize="35dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -90,7 +93,8 @@
         android:layout_below="@+id/mission3"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="40dp"
+        android:textSize="35dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -104,7 +108,8 @@
         android:layout_below="@+id/mission4"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="40dp"
+        android:textSize="35dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
