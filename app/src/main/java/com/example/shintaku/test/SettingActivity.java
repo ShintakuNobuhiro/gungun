@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 //課題大項目選択画面
 public class SettingActivity extends AppCompatActivity {
@@ -63,8 +64,28 @@ public class SettingActivity extends AppCompatActivity {
                 Intent intent = new Intent(SettingActivity.this, LevelActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                ASyncPost post = new ASyncPost();
-                post.execute("1", str[0], str[1]);
+                // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
+                ASyncPost task = new ASyncPost(SettingActivity.this,"http://10.0.2.2/android_post_test.php",
+                    // タスク完了時に呼ばれるUIのハンドラ
+                    new HttpPostHandler() {
+                        @Override
+                        public void onPostCompleted(String response) {
+                        }
+
+                        @Override
+                        public void onPostFailed(String response) {
+                            Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    task.addPostParam( "post_1", "ユーザID" );
+                    task.addPostParam( "post_2", "パスワード" );
+                    task.addPostParam( "mission_ids[]", str[0] );
+                    task.addPostParam( "mission_ids[]", str[1] );
+
+                    // タスクを開始
+                    task.execute();
+
+
                 startActivity(intent);
             }
         });

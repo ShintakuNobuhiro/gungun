@@ -133,6 +133,7 @@ public class Setting2Activity extends AppCompatActivity {
                     String text = mission[finalI].getText().toString();
 
                     intent.putExtra(String.valueOf(genre[category]), text);
+                    intent.putExtra("missionid","");
                     Log.d("text", String.valueOf(genre[category])+text);
                     // 返却したい結果ステータスをセットする
                     setResult(Activity.RESULT_OK, intent);
@@ -180,9 +181,10 @@ public class Setting2Activity extends AppCompatActivity {
                 try {
                     //パース準備
                     JSONObject json = new JSONObject(result);
+                    Log.d("test",String.valueOf(json));
                     JSONObject missionObject = json.getJSONObject("levels");
-                    Log.d("test", String.valueOf(missionObject));
-                    JSONArray missions = missionObject.getJSONArray("missions");
+                    Log.d("test2", String.valueOf(missionObject));
+                    JSONArray missions = missionObject.getJSONArray(String.valueOf(level));
 
                     //mission分解、説明の配列化
                     for (int i = 0; i < missions.length(); i++) {
@@ -206,7 +208,6 @@ public class Setting2Activity extends AppCompatActivity {
 
                     }
                 } catch (JSONException e) {
-                    Log.e("error",e.toString());
                     e.printStackTrace();
                 }
             }
