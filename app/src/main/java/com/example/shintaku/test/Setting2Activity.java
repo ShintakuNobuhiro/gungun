@@ -24,6 +24,7 @@ public class Setting2Activity extends AppCompatActivity {
     int lvlMax = 4; //最高
     final int firstPage = 1; //初期ページ
     int page = firstPage;
+    ArrayList<Integer> mission_id = new ArrayList<>();
     ArrayList<String> description = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +132,7 @@ public class Setting2Activity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(Setting2Activity.this, SettingActivity.class);
                     String text = mission[finalI].getText().toString();
+                    String id = String.valueOf(mission_id.get(finalI));
 
                     intent.putExtra(String.valueOf(genre[category]), text);
                     intent.putExtra("missionid","");
@@ -187,8 +189,11 @@ public class Setting2Activity extends AppCompatActivity {
                     JSONArray missions = missionObject.getJSONArray(String.valueOf(level));
 
                     //mission分解、説明の配列化
+                    JSONObject level = levels.getJSONObject(lvl - 1);
+                    JSONArray missions = level.getJSONArray("missions");
                     for (int i = 0; i < missions.length(); i++) {
                         JSONObject mission = missions.getJSONObject(i);
+                        mission_id.add(mission.getInt("id"));
                         description.add(mission.getString("description"));
                         //Log.d("description",i+","+description.get(i));
                     }
@@ -200,8 +205,8 @@ public class Setting2Activity extends AppCompatActivity {
                         button[i] = (Button) findViewById(id[i]);
                         int tmp = (page-1)*id.length + i;
                         if(tmp < description.size() && tmp >= 0) {
-                            //Log.d("tmp", String.valueOf(tmp)+ "," + String.valueOf(i));
-                            button[i].setText(description.get(tmp));
+                            Log.d("tmp", String.valueOf(tmp)+ "," + String.valueOf(description.get(tmp)));
+                            button[i].setText(String.valueOf(description.get(tmp)));
                         } else {
                             button[i].setText("empty");
                         }
