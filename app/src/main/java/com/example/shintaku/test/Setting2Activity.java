@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -170,19 +171,20 @@ public class Setting2Activity extends AppCompatActivity {
     }
 
     public void jsonSetText(int cat, final int lvl, final int p) {
-        ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
-            public void onPreExecute() {
-                for(int i = description.size()-1; i>=0; i--) {
-                    description.remove(i);
-                }
-            }
-            public void onProgressUpdate(int progress) {
-            }
-            public void onPostExecute(final String result) {
-                Log.d("start", result);
+        String URL = null;
+        if (cat == 0 || cat == 1) {
+            URL = "https://railstutorial-ukyankyan-1.c9.io/category/" + cat + ".json";
+            Log.d("seturl", URL);
+        } else {
+            Log.e("error", "error");
+        }
+        // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
+        ASyncPost task = new ASyncPost(Setting2Activity.this, URL, new HttpPostHandler() {
+            @Override
+            public void onPostCompleted(String response) {
                 try {
                     //パース準備
-                    JSONObject json = new JSONObject(result);
+                    JSONObject json = new JSONObject(response);
                     String name = json.getString("name");
                     JSONArray levels = json.getJSONArray("levels");
                     //mission分解、説明の配列化
@@ -197,32 +199,32 @@ public class Setting2Activity extends AppCompatActivity {
 
                     //missionの表示
                     final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
-                    final Button button[] =new Button[id.length];
-                    for(int i = 0; i < id.length; i++) {
+                    final Button button[] = new Button[id.length];
+                    for (int i = 0; i < id.length; i++) {
                         button[i] = (Button) findViewById(id[i]);
-                        int tmp = (page-1)*id.length + i;
-                        if(tmp < description.size() && tmp >= 0) {
-                            Log.d("tmp", String.valueOf(tmp)+ "," + String.valueOf(description.get(tmp)));
+                        int tmp = (page - 1) * id.length + i;
+                        if (tmp < description.size() && tmp >= 0) {
+                            Log.d("tmp", String.valueOf(tmp) + "," + String.valueOf(description.get(tmp)));
                             button[i].setText(String.valueOf(description.get(tmp)));
                         } else {
                             button[i].setText("empty");
                         }
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            public void onCancelled() {
+
+            @Override
+            public void onPostFailed(String response) {
+                Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
             }
         });
-        String URL = null;
-        if(cat == 0 || cat ==1) {
-            URL = "https://railstutorial-ukyankyan-1.c9.io/category/"+cat+".json";
-        } else {
-            Log.e("error","error");
-        }
-        asyncGet.execute(URL);
+        task.addPostParam("post_1", "ユーザID");
+        task.addPostParam("post_2", "パスワード");
+
+        // タスクを開始
+        task.execute();
     }
 }
 

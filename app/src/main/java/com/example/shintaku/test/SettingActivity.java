@@ -20,10 +20,8 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        final String[] description = new String[2];
 
         Button btn = (Button) this.findViewById(R.id.checkButton); //健康
-        final Button finalBtn = btn;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,7 +38,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
         btn = (Button) this.findViewById(R.id.checkButton2); //お友達・あいさつ
-        final Button finalBtn1 = btn;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

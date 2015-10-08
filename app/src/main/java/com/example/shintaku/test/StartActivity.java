@@ -1,12 +1,15 @@
 package com.example.shintaku.test;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -14,15 +17,36 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        View decor = this.getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         Button btnNext = (Button) this.findViewById(R.id.button);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StartActivity.this,LevelActivity.class);
+                Intent intent = new Intent(StartActivity.this, LevelActivity.class);
                 startActivity(intent);
+            }
+        });
+        final SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        Button btn = (Button) findViewById(R.id.button6);
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                SharedPreferences.Editor e = sp.edit();
+                e.putString("card_id", "gegrjysre468");
+                e.putString("password", "qwerty123");
+                e.commit();
+            }
+        });
+
+        btn = (Button) findViewById(R.id.button7);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 「data」キーを指定し読み込みを実行：保存されていないときは空白文字列をデフォルトとする
+                Log.d("test", sp.getString("card_id", ""));
+                Toast.makeText(getApplicationContext(), "読込", Toast.LENGTH_SHORT).show();
             }
         });
     }

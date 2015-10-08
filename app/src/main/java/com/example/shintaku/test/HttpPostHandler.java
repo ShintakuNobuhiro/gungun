@@ -2,6 +2,7 @@ package com.example.shintaku.test;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * HTTP通信のPOSTタスク完了時に，通信の成否に応じて，受信した通信内容をUI上で取り扱うための抽象クラス。
@@ -14,7 +15,9 @@ public abstract class HttpPostHandler extends Handler {
     public void handleMessage(Message msg)
     {
         boolean isPostSuccess = msg.getData().getBoolean("http_post_success");
-        String http_response = msg.getData().get("http_response").toString();
+        String http_response = null;
+        if(msg.getData().get("http_response").toString() != null)
+            http_response = msg.getData().get("http_response").toString();
 
         if( isPostSuccess )
         {
@@ -23,6 +26,7 @@ public abstract class HttpPostHandler extends Handler {
         else
         {
             onPostFailed( http_response );
+            Log.e("post","error");
         }
     }
 
