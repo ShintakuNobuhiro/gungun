@@ -66,7 +66,7 @@ public class SettingActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
-                ASyncPost task = new ASyncPost(SettingActivity.this,"http://10.0.2.2/android_post_test.php",
+                ASyncPost task = new ASyncPost(SettingActivity.this,"https://",
                     // タスク完了時に呼ばれるUIのハンドラ
                     new HttpPostHandler() {
                         @Override
@@ -80,8 +80,10 @@ public class SettingActivity extends AppCompatActivity {
                     });
                     task.addPostParam( "post_1", "ユーザID" );
                     task.addPostParam( "post_2", "パスワード" );
-                    task.addPostParam( "mission_ids[]", str[0] );
-                    task.addPostParam( "mission_ids[]", str[1] );
+                    if(mission_id[0]!=0)
+                        task.addPostParam("mission_ids[]", String.valueOf(mission_id[0]));
+                    if(mission_id[1]!=0)
+                        task.addPostParam( "mission_ids[]", String.valueOf(mission_id[1]));
 
                     // タスクを開始
                     task.execute();
