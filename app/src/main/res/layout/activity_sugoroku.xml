@@ -7,11 +7,10 @@
     tools:context="com.example.shintaku.test.SugorokuActivity">
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/imageView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-        android:src="@drawable/tshin_top"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

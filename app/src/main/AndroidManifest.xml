@@ -63,11 +63,6 @@
             android:label="@string/title_activity_setting2"
             android:screenOrientation="landscape" >
         </activity>
-        <activity
-            android:name=".submitActivity"
-            android:label="@string/title_activity_submit"
-            android:theme="@style/AppTheme" >
-        </activity>
     </application>
 
 </manifest>

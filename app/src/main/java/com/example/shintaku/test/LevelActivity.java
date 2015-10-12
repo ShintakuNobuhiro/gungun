@@ -1,6 +1,7 @@
 package com.example.shintaku.test;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -35,12 +36,18 @@ public class LevelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
+        final SharedPreferences sp = getSharedPreferences("data",MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putString("thegeegegh", "qwerty123");
+        e.commit();
         // ADD-S 2015/07/28 for read NFC
         // NFC-ID情報を表示する
         String nfcId = NfcActivity.nfcIdInfo;
-        Log.d("nfc", nfcId);
+        nfcId = "thegeegegh";
+        String password = sp.getString(nfcId, "");
+        Log.d("nfc", nfcId+","+password);
 
-        post();
+        post(nfcId,password);
 
 
         //課題選択ボタン
@@ -112,7 +119,7 @@ public class LevelActivity extends AppCompatActivity {
         }
     }
 
-    public void post() {
+    public void post(String nfcID, String password) {
         // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
         ASyncPost task = new ASyncPost(LevelActivity.this, "https://railstutorial-ukyankyan-1.c9.io/users/1.json",
                 // タスク完了時に呼ばれるUIのハンドラ
@@ -168,8 +175,8 @@ public class LevelActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
                     }
                 });
-        task.addPostParam("post_1", "ユーザID");
-        task.addPostParam("post_2", "パスワード");
+        task.addPostParam("post_1", nfcID);
+        task.addPostParam("post_2", password);
 
         // タスクを開始
         task.execute();

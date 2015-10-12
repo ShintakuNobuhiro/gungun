@@ -34,8 +34,7 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 SharedPreferences.Editor e = sp.edit();
-                e.putString("card_id", "gegrjysre468");
-                e.putString("password", "qwerty123");
+                e.putString("thegeegegh", "qwerty123");
                 e.commit();
             }
         });
@@ -45,7 +44,7 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 「data」キーを指定し読み込みを実行：保存されていないときは空白文字列をデフォルトとする
-                Log.d("test", sp.getString("card_id", ""));
+                Log.d("test", sp.getString("thegeegegh", ""));
                 Toast.makeText(getApplicationContext(), "読込", Toast.LENGTH_SHORT).show();
             }
         });

@@ -2,6 +2,7 @@ package com.example.shintaku.test;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,6 +21,11 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        String nfcId = NfcActivity.nfcIdInfo;
+        final SharedPreferences sp = getSharedPreferences("data",MODE_PRIVATE);
+        final String password = sp.getString(nfcId, "");
+        Log.d("nfc", nfcId + "," + password);
+
 
         Button btn = (Button) this.findViewById(R.id.checkButton); //健康
         btn.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +62,7 @@ public class SettingActivity extends AppCompatActivity {
 
         //決定
         btn = (Button) this.findViewById(R.id.button3);
+        final String finalNfcId = nfcId;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,8 +82,8 @@ public class SettingActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
                         }
                     });
-                    task.addPostParam( "post_1", "ユーザID" );
-                    task.addPostParam( "post_2", "パスワード" );
+                    task.addPostParam( "post_1", finalNfcId);
+                    task.addPostParam( "post_2", password );
                     if(mission_id[0]!=0)
                         task.addPostParam("mission_ids[]", String.valueOf(mission_id[0]));
                     if(mission_id[1]!=0)

@@ -1,6 +1,7 @@
 package com.example.shintaku.test;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +24,13 @@ public class MissionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mission);
+        final String nfcId = NfcActivity.nfcIdInfo;
+        final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        final String password = sp.getString(nfcId, "");
+        Log.d("nfc", nfcId + "," + password);
+
         final String description[] = new String[4];
+        final int missionId[] = new int[4];
         final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
         final int[] chkOn = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.orange), getResources().getColor(R.color.red)};
         final int[] chkOff = new int[]{getResources().getColor(R.color.lightblue), getResources().getColor(R.color.lightgreen), getResources().getColor(R.color.lightorange), getResources().getColor(R.color.lightred)};
@@ -34,33 +42,42 @@ public class MissionActivity extends AppCompatActivity {
             chkBtn[i].setBackgroundColor(chkOff[i]);
             chkBtn[i].setTextColor(getResources().getColor(R.color.black));
         }
-        ASyncGet asyncGet = new ASyncGet(new AsyncCallback() {
-            public void onPreExecute() {
-            }
-            public void onProgressUpdate(int progress) {
-            }
-            public void onPostExecute(final String result) {
-                Log.d("start", result);
-                try {
-                    //パース準備
-                    JSONObject json = new JSONObject(result);
-                    JSONArray missions = json.getJSONArray("missions");
+        // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
+        ASyncPost task = new ASyncPost(MissionActivity.this,"https://",
+                // タスク完了時に呼ばれるUIのハンドラ
+                new HttpPostHandler() {
+                    @Override
+                    public void onPostCompleted(String response) {
+                        Log.d("start", response);
+                        try {
+                            //パース準備
+                            JSONObject json = new JSONObject(response);
+                            JSONArray missions = json.getJSONArray("assigns");
+                            JSONObject mission[] = new JSONObject[4];
 
-                    //mission分解、説明の配列化
-                    for (int i = 0; i < missions.length(); i++) {
-                        JSONObject mission = missions.getJSONObject(i);
-                        description[i] = mission.getString("description");
-                        chkBtn[i].setText(description[i]);
+                            //mission分解、説明の配列化
+                            for (int i = 0; i < missions.length(); i++) {
+                                mission[i] = missions.getJSONObject(i);
+                                missionId[i] = mission[i].getInt("mission_id");
+                                description[i] = mission[i].getString("description");
+                                chkBtn[i].setText(description[i]);
+                            }
+                        } catch (JSONException e) {
+                            Log.e("error",e.toString());
+                            e.printStackTrace();
+                        }
                     }
-                } catch (JSONException e) {
-                    Log.e("error",e.toString());
-                    e.printStackTrace();
-                }
-            }
-            public void onCancelled() {
-            }
-        });
-        asyncGet.execute("https://railstutorial-ukyankyan-1.c9.io/users/1.json");
+
+                    @Override
+                    public void onPostFailed(String response) {
+                        Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
+                    }
+                });
+        task.addPostParam( "post_1", nfcId);
+        task.addPostParam( "post_2", password);
+
+        // タスクを開始
+        task.execute();
 
         for(int i = 0; i < id.length; i++) {
             final int finalI = i;
@@ -86,6 +103,28 @@ public class MissionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
                 startActivity(intent);
+                // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
+                ASyncPost task = new ASyncPost(MissionActivity.this,"https://",
+                        // タスク完了時に呼ばれるUIのハンドラ
+                        new HttpPostHandler() {
+                            @Override
+                            public void onPostCompleted(String response) {
+                            }
+
+                            @Override
+                            public void onPostFailed(String response) {
+                                Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                task.addPostParam("post_1", nfcId);
+                task.addPostParam("post_2", password);
+                for(int i = 0; i < 4 ; i++) {
+                    if(clear[i]=true)
+                        task.addPostParam("mission_ids[]", String.valueOf(missionId));
+                }
+
+                // タスクを開始
+                task.execute();
             }
         });
     }
