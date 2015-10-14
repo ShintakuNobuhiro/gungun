@@ -39,11 +39,10 @@ public class LevelActivity extends AppCompatActivity {
         final SharedPreferences sp = getSharedPreferences("data",MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
         e.putString("thegeegegh", getString(R.string.password));
-        e.commit();
+        e.apply();
         // ADD-S 2015/07/28 for read NFC
         // NFC-ID情報を表示する
         String nfcId = NfcActivity.nfcIdInfo;
-        nfcId = "thegeegegh";
         String password = sp.getString(nfcId, "");
         Log.d("nfc", nfcId+","+password);
 
