@@ -34,7 +34,7 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 SharedPreferences.Editor e = sp.edit();
-                e.putString("thegeegegh", "qwerty123");
+                e.putString("thegeegegh", getString(R.string.password));
                 e.commit();
             }
         });
