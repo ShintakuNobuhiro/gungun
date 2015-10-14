@@ -40,9 +40,9 @@ public class SettingActivity extends AppCompatActivity {
                 int requestCode = 1001;
                 // 返却値を考慮したActivityの起動を行う
                 startActivityForResult(intent, requestCode);
-
             }
         });
+
         btn = (Button) this.findViewById(R.id.checkButton2); //お友達・あいさつ
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +58,6 @@ public class SettingActivity extends AppCompatActivity {
                 startActivityForResult(intent, requestCode);
             }
         });
-
 
         //決定
         btn = (Button) this.findViewById(R.id.button3);
@@ -82,16 +81,14 @@ public class SettingActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
                         }
                     });
-                    task.addPostParam( "post_1", finalNfcId);
-                    task.addPostParam( "post_2", password );
-                    if(mission_id[0]!=0)
-                        task.addPostParam("mission_ids[]", String.valueOf(mission_id[0]));
-                    if(mission_id[1]!=0)
-                        task.addPostParam( "mission_ids[]", String.valueOf(mission_id[1]));
-
+                    task.addPostParam("post_1", finalNfcId);
+                    task.addPostParam("post_2", password);
+                    for(int i=0;i<2;i++) {
+                        if(mission_id[i]!=0)
+                            task.addPostParam("mission_ids[]", String.valueOf(mission_id[i]));
+                    }
                     // タスクを開始
                     task.execute();
-
 
                 startActivity(intent);
             }

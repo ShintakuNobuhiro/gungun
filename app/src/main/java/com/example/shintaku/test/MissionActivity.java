@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 //チェック画面
 public class MissionActivity extends AppCompatActivity {
 
@@ -30,7 +32,7 @@ public class MissionActivity extends AppCompatActivity {
         Log.d("nfc", nfcId + "," + password);
 
         final String description[] = new String[4];
-        final int missionId[] = new int[4];
+        final int missionId[] = {-1,-1,-1,-1};
         final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
         final int[] chkOn = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.orange), getResources().getColor(R.color.red)};
         final int[] chkOff = new int[]{getResources().getColor(R.color.lightblue), getResources().getColor(R.color.lightgreen), getResources().getColor(R.color.lightorange), getResources().getColor(R.color.lightred)};
@@ -84,7 +86,7 @@ public class MissionActivity extends AppCompatActivity {
             chkBtn[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (clear[finalI] == false) {
+                    if (!clear[finalI]) {
                         clear[finalI] = true;
                         chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
                         chkBtn[finalI].setTextColor(getResources().getColor(R.color.white));
@@ -119,8 +121,8 @@ public class MissionActivity extends AppCompatActivity {
                 task.addPostParam("post_1", nfcId);
                 task.addPostParam("post_2", password);
                 for(int i = 0; i < 4 ; i++) {
-                    if(clear[i]=true)
-                        task.addPostParam("mission_ids[]", String.valueOf(missionId));
+                    if(clear[i]=true && missionId[i]!=-1)
+                        task.addPostParam("mission_ids[]", Arrays.toString(missionId));
                 }
 
                 // タスクを開始
