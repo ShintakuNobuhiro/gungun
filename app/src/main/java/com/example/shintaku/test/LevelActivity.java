@@ -38,7 +38,7 @@ public class LevelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_level);
         final SharedPreferences sp = getSharedPreferences("data",MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
-        e.putString("thegeegegh", "qwerty123");
+        e.putString("thegeegegh", getString(R.string.password));
         e.commit();
         // ADD-S 2015/07/28 for read NFC
         // NFC-ID情報を表示する
