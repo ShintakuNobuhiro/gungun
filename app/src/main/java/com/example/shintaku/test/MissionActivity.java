@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -33,6 +32,9 @@ public class MissionActivity extends AppCompatActivity {
     boolean clear[] = new boolean[4]; //達成状況の保存
     final int missionId[] = {-1,-1,-1,-1};
     String nfcId,password;
+    final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
+    final String description[] = new String[4];
+    final Button chkBtn[] = new Button[id.length];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,56 +46,17 @@ public class MissionActivity extends AppCompatActivity {
         password = sp.getString(nfcId, "");
         Log.d("nfc", nfcId + "," + password);
 
-        final String description[] = new String[4];
-
-        final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
         final int[] chkOn = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.orange), getResources().getColor(R.color.red)};
         final int[] chkOff = new int[]{getResources().getColor(R.color.lightblue), getResources().getColor(R.color.lightgreen), getResources().getColor(R.color.lightorange), getResources().getColor(R.color.lightred)};
 
-        final Button chkBtn[] = new Button[id.length];
         for (int i = 0; i < id.length; i++) {
             chkBtn[i] = (Button) findViewById(id[i]);
             clear[i] = false;
             chkBtn[i].setBackgroundColor(chkOff[i]);
             chkBtn[i].setTextColor(getResources().getColor(R.color.black));
         }
+        new Loader().execute();
 
-        // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
-        ASyncPost task = new ASyncPost(MissionActivity.this, "https://",
-                // タスク完了時に呼ばれるUIのハンドラ
-                new HttpPostHandler() {
-                    @Override
-                    public void onPostCompleted(String response) {
-                        Log.d("start", response);
-                        try {
-                            //パース準備
-                            JSONObject json = new JSONObject(response);
-                            JSONArray missions = json.getJSONArray("assigns");
-                            JSONObject mission[] = new JSONObject[4];
-
-                            //mission分解、説明の配列化
-                            for (int i = 0; i < missions.length(); i++) {
-                                mission[i] = missions.getJSONObject(i);
-                                missionId[i] = mission[i].getInt("mission_id");
-                                description[i] = mission[i].getString("description");
-                                chkBtn[i].setText(description[i]);
-                            }
-                        } catch (JSONException e) {
-                            Log.e("error", e.toString());
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onPostFailed(String response) {
-                        Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
-                    }
-                });
-        task.addPostParam("post_1", nfcId);
-        task.addPostParam("post_2", password);
-
-        // タスクを開始
-        task.execute();
 
         for (int i = 0; i < id.length; i++) {
             final int finalI = i;
@@ -118,8 +81,8 @@ public class MissionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
-                startActivity(intent);
                 new Loader().execute();
+                startActivity(intent);
             }
         });
     }
@@ -155,15 +118,34 @@ public class MissionActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(JSONObject result) {
                 super.onPostExecute(result);
+                Log.d("start", String.valueOf(result));
+                try {
+                    //パース準備
+                    JSONArray missions = null;
+                    JSONObject mission[] = new JSONObject[4];
+                    if(result!=null) {
+                        missions = result.getJSONArray("assigns");
 
-                if (result == null) {
-                    Toast.makeText(MissionActivity.this, "Successfully post json object", Toast.LENGTH_LONG).show();
+                    }
+
+                    //mission分解、説明の配列化
+                    if(missions!=null) {
+                        for (int i = 0; i < missions.length(); i++) {
+                            mission[i] = missions.getJSONObject(i);
+                            missionId[i] = mission[i].getInt("mission_id");
+                            description[i] = mission[i].getString("description");
+                            chkBtn[i].setText(description[i]);
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e("error", e.toString());
+                    e.printStackTrace();
                 }
             }
         }
 
 
-    public JSONObject postJsonObject(String url, JSONObject loginJobj) {
+    public JSONObject postJsonObject(String url, JSONObject loginJson) {
         InputStream inputStream = null;
         String result = "";
         try {
@@ -175,7 +157,7 @@ public class MissionActivity extends AppCompatActivity {
             String json = "";
 
             // 4. convert JSONObject to JSON to String
-            json = loginJobj.toString();
+            json = loginJson.toString();
             System.out.println(json);
             // 5. set json to StringEntity
             StringEntity se = new StringEntity(json);

@@ -2,6 +2,7 @@ package com.example.shintaku.test;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +13,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,6 +40,7 @@ public class LevelActivity extends AppCompatActivity {
     private MyTimerTask timerTask = null;
     private Timer timer = null;
     private Handler handler = new Handler();
+    String nfcId,password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +52,11 @@ public class LevelActivity extends AppCompatActivity {
         e.apply();
         // ADD-S 2015/07/28 for read NFC
         // NFC-ID情報を表示する
-        String nfcId = NfcActivity.nfcIdInfo;
-        String password = sp.getString(nfcId, "");
+        nfcId = NfcActivity.nfcIdInfo;
+        password = sp.getString(nfcId, "");
         Log.d("nfc", nfcId+","+password);
 
-        post(nfcId,password);
+        new Loader().execute();
 
 
         //課題選択ボタン
@@ -118,66 +128,144 @@ public class LevelActivity extends AppCompatActivity {
         }
     }
 
-    public void post(String nfcID, String password) {
-        // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
-        ASyncPost task = new ASyncPost(LevelActivity.this, "https://railstutorial-ukyankyan-1.c9.io/users/1.json",
-                // タスク完了時に呼ばれるUIのハンドラ
-                new HttpPostHandler() {
-                    @Override
-                    public void onPostCompleted(String response) {
-                        Log.d("start", response);
-                        try {
-                            //パース準備
-                            JSONObject json = new JSONObject(response);
-                            JSONArray statuses = json.getJSONArray("status");
-                            String[] name = new String[1];
-                            String exp[] = new String[statuses.length()];//現在経験値
-                            String next[] = new String[statuses.length()];//レベルアップに必要な経験値
-                            //ステータスの各項目分解、経験値の配列化
-                            for (int i = 0; i < statuses.length(); i++) {
-                                JSONObject status = statuses.getJSONObject(i);
-                                exp[i] = status.getString("exp");
-                                next[i] = status.getString("next");
-                            }
-                            //名前の表示
-                            final TextView nameTxt = (TextView) findViewById(R.id.name);
-                            name[0] = json.getString("name");
-                            nameTxt.setText(name[0]);
+    class Loader extends AsyncTask<Void, Void, JSONObject> {
 
-                            //プログレスバーの伸び率設定等
-                            int id[] = {R.id.progressBar, R.id.progressBar2, R.id.progressBar3, R.id.progressBar4};
-                            ProgressBar progressBar[] = new ProgressBar[id.length];
-                            for (int i = 0; i < statuses.length(); i++) {
-                                Log.d("statues", String.valueOf(i));
-                                progressBar[i] = (ProgressBar) findViewById(id[i]);
-                                progressBar[i].setMax(Integer.parseInt(next[i])); // 水平プログレスバーの最大値を設定
-                                Log.d("max", String.valueOf(progressBar[i].getMax()));
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-                                // タイマーインスタンスを作成
-                                timer = new Timer();
-                                // タイマータスクインスタンスを作成
-                                timerTask = new MyTimerTask();
-                                // タイマースケジュールを設定
-                                timer.schedule(timerTask, 0, 3);
-                                // カウンタを初期化して設定
-                                prog[i] = progressBar[i];
-                                maxCount[i] = Integer.parseInt(exp[i]);
-                            }
-                        } catch (JSONException e) { //JSONObject等例外発生時
-                            Log.e("error", e.toString());
-                            e.printStackTrace();
-                        }
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+
+            JSONObject jobj = new JSONObject();
+
+            try {
+                jobj.put("card_number", nfcId);
+                jobj.put("password", password);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return postJsonObject("https://railstutorial-ukyankyan-1.c9.io/missions.json", jobj);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+            Log.d("result", String.valueOf(result));
+            if (result != null) {
+                try {
+                    //パース準備
+                    JSONArray statuses = result.getJSONArray("status");
+                    String[] name = new String[1];
+                    String exp[] = new String[statuses.length()];//現在経験値
+                    String next[] = new String[statuses.length()];//レベルアップに必要な経験値
+                    //ステータスの各項目分解、経験値の配列化
+                    for (int i = 0; i < statuses.length(); i++) {
+                        JSONObject status = statuses.getJSONObject(i);
+                        exp[i] = status.getString("exp");
+                        next[i] = status.getString("next");
                     }
+                    //名前の表示
+                    final TextView nameTxt = (TextView) findViewById(R.id.name);
+                    name[0] = result.getString("name");
+                    nameTxt.setText(name[0]);
 
-                    @Override
-                    public void onPostFailed(String response) {
-                        Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
+                    //プログレスバーの伸び率設定等
+                    int id[] = {R.id.progressBar, R.id.progressBar2, R.id.progressBar3, R.id.progressBar4};
+                    ProgressBar progressBar[] = new ProgressBar[id.length];
+                    for (int i = 0; i < statuses.length(); i++) {
+                        Log.d("statues", String.valueOf(i));
+                        progressBar[i] = (ProgressBar) findViewById(id[i]);
+                        progressBar[i].setMax(Integer.parseInt(next[i])); // 水平プログレスバーの最大値を設定
+                        Log.d("max", String.valueOf(progressBar[i].getMax()));
+
+                        // タイマーインスタンスを作成
+                        timer = new Timer();
+                        // タイマータスクインスタンスを作成
+                        timerTask = new MyTimerTask();
+                        // タイマースケジュールを設定
+                        timer.schedule(timerTask, 0, 3);
+                        // カウンタを初期化して設定
+                        prog[i] = progressBar[i];
+                        maxCount[i] = Integer.parseInt(exp[i]);
                     }
-                });
-        task.addPostParam("post_1", nfcID);
-        task.addPostParam("post_2", password);
+                } catch (JSONException e) { //JSONObject等例外発生時
+                    Log.e("error", e.toString());
+                    e.printStackTrace();
+                }
 
-        // タスクを開始
-        task.execute();
+            }
+        }
+
+    }
+
+    public JSONObject postJsonObject(String url, JSONObject loginJobj){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // 1. create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // 2. make POST request to the given URL
+
+            HttpPost httpPost = new HttpPost(url);
+
+            System.out.println(url);
+            String json = "";
+
+            // 4. convert JSONObject to JSON to String
+
+            json = loginJobj.toString();
+
+            System.out.println(json);
+            // 5. set json to StringEntity
+            StringEntity se = new StringEntity(json);
+
+            // 6. set httpPost Entity
+            httpPost.setEntity(se);
+
+            // 7. Set some headers to inform server about the type of the content
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+
+            // 8. Execute POST request to the given URL
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            // 9. receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // 10. convert inputstream to string
+            if(inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        JSONObject json = null;
+        try {
+            json = new JSONObject(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // 11. return result
+        Log.d("json",String.valueOf(json));
+        return json;
+    }
+
+    private String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
     }
 }
