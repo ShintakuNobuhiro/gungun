@@ -193,8 +193,8 @@ public class Setting2Activity extends AppCompatActivity {
             JSONObject jobj = new JSONObject();
 
             try {
-                String nfcId = "abcdef123456";
-                String password = "123456";
+                String nfcId = getString(R.string.card_number);
+                String password = getString(R.string.password);
                 jobj.put("card_number", nfcId);
                 jobj.put("password", password);
 
