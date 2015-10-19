@@ -1,7 +1,6 @@
 package com.example.shintaku.test;
 
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -46,7 +45,7 @@ public class SugorokuActivity extends AppCompatActivity { //ローマ字でダ�
         AnimationDrawable anim = new AnimationDrawable();
 
         // 画像の読み込み //
-        Drawable frame1 = getResources().getDrawable( R.drawable.tshin_1);
+/*       Drawable frame1 = getResources().getDrawable( R.drawable.tshin_1);
         Drawable frame2 = getResources().getDrawable( R.drawable.tshin_2);
         Drawable frame3 = getResources().getDrawable( R.drawable.tshin_3);
         Drawable frame4 = getResources().getDrawable( R.drawable.tshin_4);
@@ -67,6 +66,6 @@ public class SugorokuActivity extends AppCompatActivity { //ローマ字でダ�
         img.setBackground(anim);
 
         // アニメーション開始
-        anim.start();
+        anim.start();*/
     }
 }

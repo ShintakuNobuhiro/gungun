@@ -42,6 +42,7 @@ public class MissionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mission);
 
         nfcId = NfcActivity.nfcIdInfo;
+        nfcId = "abcdef123456";
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         password = sp.getString(nfcId, "");
         Log.d("nfc", nfcId + "," + password);

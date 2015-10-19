@@ -2,6 +2,7 @@ package com.example.shintaku.test;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,12 +11,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 //課題小項目選択
@@ -25,6 +34,7 @@ public class Setting2Activity extends AppCompatActivity {
     int lvlMax = 4; //最高
     final int firstPage = 1; //初期ページ
     int page = firstPage;
+    int category = -1;
     ArrayList<Integer> mission_id = new ArrayList<>();
     ArrayList<String> description = new ArrayList<>();
     @Override
@@ -35,7 +45,7 @@ public class Setting2Activity extends AppCompatActivity {
         //大項目名表示
         Settings tr = (Settings) getIntent().getSerializableExtra("genre");//大項目名のインテント間引き継ぎ
         TextView a = (TextView)this.findViewById(R.id.textView);
-        final int category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
+        category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
         final String genre[]= {getString(R.string.genre1), getString(R.string.genre2), getString(R.string.genre3), getString(R.string.genre4)};
 
         if(category >= 0 || category <= 3) {
@@ -45,7 +55,7 @@ public class Setting2Activity extends AppCompatActivity {
         }
 
         final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
-        jsonSetText(category,level,page);
+        new Loader().execute();
 
         //戻るボタン
         Button btn = (Button) findViewById(R.id.button5);
@@ -76,7 +86,7 @@ public class Setting2Activity extends AppCompatActivity {
                 levelTxt.setText("レベル" + String.valueOf(level));
                 page = firstPage;
                 pageTxt.setText("ページ" + String.valueOf(page));
-                jsonSetText(category, level, page);
+                new Loader().execute();
             }
         });
 
@@ -94,7 +104,7 @@ public class Setting2Activity extends AppCompatActivity {
                 levelTxt.setText("レベル" + String.valueOf(level));
                 page = firstPage;
                 pageTxt.setText("ページ"+ String.valueOf(page));
-                jsonSetText(category, level, page);
+                new Loader().execute();
             }
         });
 
@@ -106,7 +116,7 @@ public class Setting2Activity extends AppCompatActivity {
                 page++;
                 Log.d("page", String.valueOf(page));
                 pageTxt.setText("ページ" + String.valueOf(page));
-                jsonSetText(category,level,page);
+                new Loader().execute();
             }
         });
 
@@ -120,7 +130,7 @@ public class Setting2Activity extends AppCompatActivity {
                 }
                 Log.d("page", String.valueOf(page));
                 pageTxt.setText("ページ" + String.valueOf(page));
-                jsonSetText(category,level,page);
+                new Loader().execute();
             }
         });
 
@@ -170,61 +180,142 @@ public class Setting2Activity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void jsonSetText(int cat, final int lvl, final int p) {
-        String URL = null;
-        if (cat == 0 || cat == 1) {
-            URL = "https://railstutorial-ukyankyan-1.c9.io/category/" + cat + ".json";
-            Log.d("seturl", URL);
-        } else {
-            Log.e("error", "error");
-        }
-        // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
-        ASyncPost task = new ASyncPost(Setting2Activity.this, URL, new HttpPostHandler() {
-            @Override
-            public void onPostCompleted(String response) {
-                try {
-                    //パース準備
-                    JSONObject json = new JSONObject(response);
-                    String name = json.getString("name");
-                    JSONArray levels = json.getJSONArray("levels");
-                    //mission分解、説明の配列化
-                    JSONObject level = levels.getJSONObject(lvl - 1);
-                    JSONArray missions = level.getJSONArray("missions");
-                    for (int i = 0; i < missions.length(); i++) {
-                        JSONObject mission = missions.getJSONObject(i);
-                        mission_id.add(mission.getInt("id"));
-                        description.add(mission.getString("description"));
-                        //Log.d("description",i+","+description.get(i));
-                    }
+    class Loader extends AsyncTask<Void, Void, JSONObject> {
 
-                    //missionの表示
-                    final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
-                    final Button button[] = new Button[id.length];
-                    for (int i = 0; i < id.length; i++) {
-                        button[i] = (Button) findViewById(id[i]);
-                        int tmp = (page - 1) * id.length + i;
-                        if (tmp < description.size() && tmp >= 0) {
-                            Log.d("tmp", String.valueOf(tmp) + "," + String.valueOf(description.get(tmp)));
-                            button[i].setText(String.valueOf(description.get(tmp)));
-                        } else {
-                            button[i].setText("empty");
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+
+            JSONObject jobj = new JSONObject();
+
+            try {
+                String nfcId = "abcdef123456";
+                String password = "123456";
+                jobj.put("card_number", nfcId);
+                jobj.put("password", password);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            int tmp = category+1;
+            String URL = "https://gungun.herokuapp.com/api/categories/" + tmp + ".json";
+            return postJsonObject(URL, jobj);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+            Log.d("result", String.valueOf(result));
+
+            //パース準備
+            try {
+                mission_id.clear();
+                description.clear();
+                String name = result.getString("name");
+                JSONArray levels = result.getJSONArray("levels");
+                //mission分解、説明の配列化
+                JSONObject lvl = levels.getJSONObject(level - 1);
+                Log.d("jsonlvl", String.valueOf(lvl));
+                JSONArray missions = lvl.getJSONArray("missions");
+                for (int i = 0; i < missions.length(); i++) {
+                    JSONObject mission = missions.getJSONObject(i);
+                    mission_id.add(mission.getInt("id"));
+                    description.add(mission.getString("description"));
+                    //Log.d("description",i+","+description.get(i));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            //missionの表示
+            final int id[] = {R.id.mission1, R.id.mission2, R.id.mission3, R.id.mission4, R.id.mission5};
+            final Button button[] = new Button[id.length];
+            for (int i = 0; i < id.length; i++) {
+                button[i] = (Button) findViewById(id[i]);
+                int tmp = (page - 1) * id.length + i;
+                if (description.size() > tmp && tmp >= 0) {
+                    Log.d("tmp", String.valueOf(tmp) + "," + String.valueOf(description.get(tmp)));
+                    Log.d("page",String.valueOf(level));
+                    button[i].setText(String.valueOf(description.get(tmp)));
+                } else {
+                    button[i].setText("empty");
                 }
             }
 
-            @Override
-            public void onPostFailed(String response) {
-                Toast.makeText(getApplicationContext(), "エラーが発生しました。", Toast.LENGTH_LONG).show();
-            }
-        });
-        task.addPostParam("post_1", "ユーザID");
-        task.addPostParam("post_2", "パスワード");
+        }
 
-        // タスクを開始
-        task.execute();
+    }
+
+    public JSONObject postJsonObject(String url, JSONObject loginJobj){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // 1. create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // 2. make POST request to the given URL
+
+            HttpPost httpPost = new HttpPost(url);
+
+            System.out.println(url);
+            String json = "";
+
+            // 4. convert JSONObject to JSON to String
+
+            json = loginJobj.toString();
+
+            System.out.println(json);
+            // 5. set json to StringEntity
+            StringEntity se = new StringEntity(json);
+
+            // 6. set httpPost Entity
+            httpPost.setEntity(se);
+
+            // 7. Set some headers to inform server about the type of the content
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+
+            // 8. Execute POST request to the given URL
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            // 9. receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // 10. convert inputstream to string
+            if(inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        JSONObject json = null;
+        try {
+            json = new JSONObject(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // 11. return result
+        Log.d("json",String.valueOf(json));
+        return json;
+    }
+
+    private String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
     }
 }
 
