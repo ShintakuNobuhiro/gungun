@@ -31,6 +31,7 @@ public class MissionActivity extends AppCompatActivity {
     boolean clear[] = new boolean[4]; //達成状況の保存
     final int missionId[] = {-1,-1,-1,-1};
     String nfcId,password;
+
     final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
     final String description[] = new String[4];
     final Button chkBtn[] = new Button[id.length];
@@ -40,9 +41,8 @@ public class MissionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mission);
 
-        nfcId = NfcActivity.nfcIdInfo;
-        nfcId = "abcdef123456";
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        nfcId = sp.getString("nfc_id","");
         password = sp.getString(nfcId, "");
         Log.d("nfc", nfcId + "," + password);
 

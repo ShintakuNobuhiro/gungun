@@ -32,10 +32,10 @@ import java.util.TimerTask;
 
 //トップ画面
 public class LevelActivity extends AppCompatActivity {
-    private int count[] = {0, 0};
-    private int maxCount[] = {0, 0};
+    private int count[] = {0, 0, 0, 0};
+    private int maxCount[] = {0, 0, 0, 0};
 
-    ProgressBar prog[] = new ProgressBar[2];
+    ProgressBar prog[] = new ProgressBar[4];
 
     private MyTimerTask timerTask = null;
     private Timer timer = null;
@@ -50,6 +50,9 @@ public class LevelActivity extends AppCompatActivity {
         // ADD-S 2015/07/28 for read NFC
         // NFC-ID情報を表示する
         nfcId = NfcActivity.nfcIdInfo;
+        SharedPreferences.Editor e = sp.edit();
+        e.putString("nfc_id", nfcId);
+        e.apply();
         password = sp.getString(nfcId, "");
         nfcId = getString(R.string.card_number);
         password = getString(R.string.password);
@@ -155,29 +158,37 @@ public class LevelActivity extends AppCompatActivity {
             Log.d("result", String.valueOf(result));
             if (result != null) {
                 try {
-                    //パース準備
-                    JSONArray statuses = result.getJSONArray("status");
-                    String[] name = new String[1];
-                    String exp[] = new String[statuses.length()];//現在経験値
-                    String next[] = new String[statuses.length()];//レベルアップに必要な経験値
+                    //パース
+
+                    String[] name = {result.getString("name")};
+                    JSONArray statuses = result.getJSONArray("statuses");
+                    Log.d("length", String.valueOf(statuses.length()));
+                    int exp[] = new int[statuses.length()];//現在経験値
+                    int next[] = new int[statuses.length()];//レベルアップに必要な経験値
+                    int level[] = new int[statuses.length()];//現在レベル
                     //ステータスの各項目分解、経験値の配列化
                     for (int i = 0; i < statuses.length(); i++) {
                         JSONObject status = statuses.getJSONObject(i);
-                        exp[i] = status.getString("exp");
-                        next[i] = status.getString("next");
+                        exp[i] = status.getInt("experience");
+                        next[i] = status.getInt("next_level_required_experience");
+                        level[i] = status.getInt("level");
                     }
                     //名前の表示
                     final TextView nameTxt = (TextView) findViewById(R.id.name);
-                    name[0] = result.getString("name");
                     nameTxt.setText(name[0]);
 
+                    int lvlId[] = {R.id.LevelView1,R.id.LevelView2,R.id.LevelView3,R.id.LevelView4};
+
                     //プログレスバーの伸び率設定等
-                    int id[] = {R.id.progressBar, R.id.progressBar2, R.id.progressBar3, R.id.progressBar4};
-                    ProgressBar progressBar[] = new ProgressBar[id.length];
+                    int progId[] = {R.id.progressBar, R.id.progressBar2, R.id.progressBar3, R.id.progressBar4};
+                    TextView levelView[] = new TextView[lvlId.length];
+                    ProgressBar progressBar[] = new ProgressBar[progId.length];
                     for (int i = 0; i < statuses.length(); i++) {
                         Log.d("statues", String.valueOf(i));
-                        progressBar[i] = (ProgressBar) findViewById(id[i]);
-                        progressBar[i].setMax(Integer.parseInt(next[i])); // 水平プログレスバーの最大値を設定
+                        progressBar[i] = (ProgressBar) findViewById(progId[i]);
+                        progressBar[i].setMax(next[i]); // 水平プログレスバーの最大値を設定
+                        levelView[i] = (TextView) findViewById(lvlId[i]);
+                        levelView[i].setText("レベル"+ level[i]);
                         Log.d("max", String.valueOf(progressBar[i].getMax()));
 
                         // タイマーインスタンスを作成
@@ -188,7 +199,7 @@ public class LevelActivity extends AppCompatActivity {
                         timer.schedule(timerTask, 0, 3);
                         // カウンタを初期化して設定
                         prog[i] = progressBar[i];
-                        maxCount[i] = Integer.parseInt(exp[i]);
+                        maxCount[i] = exp[i];
                     }
                 } catch (JSONException e) { //JSONObject等例外発生時
                     Log.e("error", e.toString());

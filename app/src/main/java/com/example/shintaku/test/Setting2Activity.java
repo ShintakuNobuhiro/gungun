@@ -2,6 +2,7 @@ package com.example.shintaku.test;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,12 +30,16 @@ import java.util.ArrayList;
 
 //課題小項目選択
 public class Setting2Activity extends AppCompatActivity {
+
     int level = 1; //現在の閲覧レベル
     int lvlMin = 1; //最低
     int lvlMax = 4; //最高
     final int firstPage = 1; //初期ページ
     int page = firstPage;
     int category = -1;
+    final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+    String nfcId = sp.getString("nfc_id","");
+    String password = sp.getString(nfcId,"");
     ArrayList<Integer> mission_id = new ArrayList<>();
     ArrayList<String> description = new ArrayList<>();
     @Override
@@ -193,8 +198,6 @@ public class Setting2Activity extends AppCompatActivity {
             JSONObject jobj = new JSONObject();
 
             try {
-                String nfcId = getString(R.string.card_number);
-                String password = getString(R.string.password);
                 jobj.put("card_number", nfcId);
                 jobj.put("password", password);
 

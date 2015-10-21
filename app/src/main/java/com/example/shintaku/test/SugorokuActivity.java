@@ -1,5 +1,6 @@
 package com.example.shintaku.test;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,11 +9,14 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 public class SugorokuActivity extends AppCompatActivity { //ローマ字でダサいが適した英語が無いらしい
-
+    String nfcId,password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sugoroku);
+        final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        nfcId = sp.getString("nfc_id","");
+        password = sp.getString(nfcId, "");
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         frameAnimationTest(imageView);
 

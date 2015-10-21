@@ -81,7 +81,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignLeft="@+id/textView2"
-            android:layout_alignStart="@+id/textView2">
+            android:layout_alignStart="@+id/textView2"
+            android:progressDrawable="@drawable/progress">
         </ProgressBar>
 
     <ProgressBar
@@ -94,7 +95,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignLeft="@+id/progressBar"
-        android:layout_alignStart="@+id/progressBar" />
+        android:layout_alignStart="@+id/progressBar"
+        android:progressDrawable="@drawable/progress"/>
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
@@ -106,7 +108,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignLeft="@+id/progressBar2"
-        android:layout_alignStart="@+id/progressBar2" />
+        android:layout_alignStart="@+id/progressBar2"
+        android:progressDrawable="@drawable/progress"/>
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
@@ -117,7 +120,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/progressBar3"
         android:layout_alignStart="@+id/progressBar3"
-        android:layout_marginBottom="26dp" />
+        android:layout_marginBottom="26dp"
+        android:progressDrawable="@drawable/progress"/>
 
     <TextView
         android:layout_width="wrap_content"
