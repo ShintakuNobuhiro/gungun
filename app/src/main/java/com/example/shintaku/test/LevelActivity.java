@@ -47,13 +47,12 @@ public class LevelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
         final SharedPreferences sp = getSharedPreferences("data",MODE_PRIVATE);
-        SharedPreferences.Editor e = sp.edit();
-        e.putString("thegeegegh", getString(R.string.password));
-        e.apply();
         // ADD-S 2015/07/28 for read NFC
         // NFC-ID情報を表示する
         nfcId = NfcActivity.nfcIdInfo;
         password = sp.getString(nfcId, "");
+        nfcId = getString(R.string.card_number);
+        password = getString(R.string.password);
         Log.d("nfc", nfcId+","+password);
 
         new Loader().execute();
@@ -147,7 +146,7 @@ public class LevelActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return postJsonObject("https://railstutorial-ukyankyan-1.c9.io/missions.json", jobj);
+            return postJsonObject("https://gungun.herokuapp.com/api/users/"+nfcId+".json", jobj);
         }
 
         @Override

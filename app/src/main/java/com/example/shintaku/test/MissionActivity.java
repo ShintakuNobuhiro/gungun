@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 //チェック画面
 public class MissionActivity extends AppCompatActivity {
@@ -101,13 +100,12 @@ public class MissionActivity extends AppCompatActivity {
                 try {
                     jobj.put("card_number", nfcId);
                     jobj.put("password", password);
-                    String tmp[] = new String[4];
-                    for (int i = 0; i < tmp.length; i++) {
-                        tmp[i] = null;
+                    JSONArray check = new JSONArray();
+                    for (int i = 0; i < 4; i++) {
                         if (clear[i] = true && missionId[i] != -1)
-                            tmp[i] = String.valueOf(missionId[i]);
+                            check.put(missionId[i]);
                     }
-                    jobj.put("mission_ids", Arrays.deepToString(tmp));
+                    jobj.put("mission_ids", check);
                     Log.d("test", String.valueOf(jobj));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -126,7 +124,6 @@ public class MissionActivity extends AppCompatActivity {
                     JSONObject mission[] = new JSONObject[4];
                     if(result!=null) {
                         missions = result.getJSONArray("assigns");
-
                     }
 
                     //mission分解、説明の配列化
