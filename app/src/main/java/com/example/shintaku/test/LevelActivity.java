@@ -53,7 +53,7 @@ public class LevelActivity extends AppCompatActivity {
         SharedPreferences.Editor e = sp.edit();
         e.putString("nfc_id", nfcId);
         e.apply();
-        Log.d("",sp.getString(nfcId, ""));
+        Log.d("", sp.getString(nfcId, ""));
         password = sp.getString(nfcId, "");
         Log.d("nfc", nfcId+","+password);
 
@@ -118,10 +118,11 @@ public class LevelActivity extends AppCompatActivity {
         public void run() {
             handler.post( new Runnable() {
                 public void run() {
+
                     for(int i = 0; i < count.length; i++) {
                         if (count[i] < maxCount[i]) {
                             count[i]++;
-                            prog[i].setProgress(count[i]);
+                            prog[i].setSecondaryProgress(count[i]);
                         }
                     }
                 }
@@ -162,12 +163,14 @@ public class LevelActivity extends AppCompatActivity {
                     String[] name = {result.getString("name")};
                     JSONArray statuses = result.getJSONArray("statuses");
                     Log.d("length", String.valueOf(statuses.length()));
+                    int recentExp[] = new int[statuses.length()];
                     int exp[] = new int[statuses.length()];//現在経験値
                     int next[] = new int[statuses.length()];//レベルアップに必要な経験値
                     int level[] = new int[statuses.length()];//現在レベル
                     //ステータスの各項目分解、経験値の配列化
                     for (int i = 0; i < statuses.length(); i++) {
                         JSONObject status = statuses.getJSONObject(i);
+                        recentExp[i] = status.getInt("recent_experience");
                         exp[i] = status.getInt("experience");
                         next[i] = status.getInt("next_level_required_experience");
                         level[i] = status.getInt("level");
@@ -186,6 +189,8 @@ public class LevelActivity extends AppCompatActivity {
                         //Log.d("statues", String.valueOf(i));
                         progressBar[i] = (ProgressBar) findViewById(progId[i]);
                         progressBar[i].setMax(next[i]); // 水平プログレスバーの最大値を設定
+                        if(exp[i] >= recentExp[i])
+                            progressBar[i].setProgress(recentExp[i]);
                         levelView[i] = (TextView) findViewById(lvlId[i]);
                         levelView[i].setText("レベル"+ level[i]);
                         //Log.d("max", String.valueOf(progressBar[i].getMax()));
@@ -195,7 +200,7 @@ public class LevelActivity extends AppCompatActivity {
                         // タイマータスクインスタンスを作成
                         timerTask = new MyTimerTask();
                         // タイマースケジュールを設定
-                        timer.schedule(timerTask, 0, 3);
+                        timer.schedule(timerTask, 0, 200);
                         // カウンタを初期化して設定
                         prog[i] = progressBar[i];
                         maxCount[i] = exp[i];

@@ -7,7 +7,7 @@
     <!-- android:secondaryProgress用のDrawable -->
     <item android:id="@android:id/secondaryProgress">
         <clip>
-            <color android:color="#9f00" />
+            <color android:color="@color/lightorange" />
         </clip>
     </item>
 
