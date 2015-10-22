@@ -167,6 +167,7 @@ public class LevelActivity extends AppCompatActivity {
                     int exp[] = new int[statuses.length()];//現在経験値
                     int next[] = new int[statuses.length()];//レベルアップに必要な経験値
                     int level[] = new int[statuses.length()];//現在レベル
+                    String category[] = new String[statuses.length()];
                     //ステータスの各項目分解、経験値の配列化
                     for (int i = 0; i < statuses.length(); i++) {
                         JSONObject status = statuses.getJSONObject(i);
@@ -174,6 +175,7 @@ public class LevelActivity extends AppCompatActivity {
                         exp[i] = status.getInt("experience");
                         next[i] = status.getInt("next_level_required_experience");
                         level[i] = status.getInt("level");
+                        category[i] = status.getString("category");
                     }
                     //名前の表示
                     final TextView nameTxt = (TextView) findViewById(R.id.name);
@@ -183,16 +185,21 @@ public class LevelActivity extends AppCompatActivity {
 
                     //プログレスバーの伸び率設定等
                     int progId[] = {R.id.progressBar, R.id.progressBar2, R.id.progressBar3, R.id.progressBar4};
+                    int catId[] = {R.id.textView3, R.id.textView5, R.id.textView6, R.id.textView7};
                     TextView levelView[] = new TextView[lvlId.length];
                     ProgressBar progressBar[] = new ProgressBar[progId.length];
+                    TextView categoryView[] = new TextView[catId.length];
+
                     for (int i = 0; i < statuses.length(); i++) {
                         //Log.d("statues", String.valueOf(i));
                         progressBar[i] = (ProgressBar) findViewById(progId[i]);
+                        categoryView[i] = (TextView) findViewById(catId[i]);
                         progressBar[i].setMax(next[i]); // 水平プログレスバーの最大値を設定
                         if(exp[i] >= recentExp[i])
                             progressBar[i].setProgress(recentExp[i]);
                         levelView[i] = (TextView) findViewById(lvlId[i]);
                         levelView[i].setText("レベル"+ level[i]);
+                        categoryView[i].setText(category[i]);
                         //Log.d("max", String.valueOf(progressBar[i].getMax()));
 
                         // タイマーインスタンスを作成

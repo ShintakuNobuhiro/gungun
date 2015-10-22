@@ -50,6 +50,7 @@ public class NfcActivity extends AppCompatActivity {
             intent.setClassName("com.example.shintaku.test",
                     "com.example.shintaku.test.LevelActivity");
             startActivity(intent);
+            finish();
         }
     }
 
