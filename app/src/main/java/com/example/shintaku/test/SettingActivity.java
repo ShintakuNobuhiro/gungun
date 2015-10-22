@@ -76,16 +76,14 @@ public class SettingActivity extends AppCompatActivity {
 
         //決定
         btn = (Button) this.findViewById(R.id.button3);
-        final String finalNfcId = nfcId;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SettingActivity.this, LevelActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                nfcId = getString(R.string.card_number);
-                password = getString(R.string.password);
                 new Loader().execute();
+                startActivity(intent);
             }
         });
     }

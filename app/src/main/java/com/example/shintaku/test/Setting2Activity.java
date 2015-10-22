@@ -37,15 +37,18 @@ public class Setting2Activity extends AppCompatActivity {
     final int firstPage = 1; //初期ページ
     int page = firstPage;
     int category = -1;
-    final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
-    String nfcId = sp.getString("nfc_id","");
-    String password = sp.getString(nfcId,"");
+
+
+    String nfcId,password;
     ArrayList<Integer> mission_id = new ArrayList<>();
     ArrayList<String> description = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting2);
+        final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        nfcId = sp.getString("nfc_id","");
+        password = sp.getString(nfcId,"");
 
         //大項目名表示
         Settings tr = (Settings) getIntent().getSerializableExtra("genre");//大項目名のインテント間引き継ぎ

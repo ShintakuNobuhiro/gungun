@@ -81,66 +81,90 @@ public class MissionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
-                new Loader().execute();
+                new Clear().execute();
                 startActivity(intent);
             }
         });
     }
 
-        class Loader extends AsyncTask<Void, Void, JSONObject> {
+    class Loader extends AsyncTask<Void, Void, JSONObject> {
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            JSONObject jobj = new JSONObject();
+            try {
+                jobj.put("password", password);
+                Log.d("test", String.valueOf(jobj));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+             return postJsonObject("https://gungun.herokuapp.com/api/users/"+nfcId+".json", jobj);
+        }
 
-            @Override
-            protected JSONObject doInBackground(Void... params) {
-                JSONObject jobj = new JSONObject();
-                try {
-                    jobj.put("card_number", nfcId);
-                    jobj.put("password", password);
-                    JSONArray check = new JSONArray();
-                    for (int i = 0; i < 4; i++) {
-                        if (clear[i] = true && missionId[i] != -1)
-                            check.put(missionId[i]);
-                    }
-                    jobj.put("mission_ids", check);
-                    Log.d("test", String.valueOf(jobj));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+            Log.d("start", String.valueOf(result));
+            try {
+                //パース準備
+                JSONArray missions = null;
+                JSONObject mission[] = new JSONObject[4];
+                if(result!=null) {
+                    missions = result.getJSONArray("assigns");
                 }
-
-                return postJsonObject("https://railstutorial-ukyankyan-1.c9.io/images.json", jobj);
-            }
-
-            @Override
-            protected void onPostExecute(JSONObject result) {
-                super.onPostExecute(result);
-                Log.d("start", String.valueOf(result));
-                try {
-                    //パース準備
-                    JSONArray missions = null;
-                    JSONObject mission[] = new JSONObject[4];
-                    if(result!=null) {
-                        missions = result.getJSONArray("assigns");
+                //mission分解、説明の配列化
+                if(missions!=null) {
+                    for (int i = 0; i < missions.length(); i++) {
+                        mission[i] = missions.getJSONObject(i);
+                        missionId[i] = mission[i].getInt("mission_id");
+                        description[i] = mission[i].getString("description");
+                        chkBtn[i].setText(description[i]);
                     }
-
-                    //mission分解、説明の配列化
-                    if(missions!=null) {
-                        for (int i = 0; i < missions.length(); i++) {
-                            mission[i] = missions.getJSONObject(i);
-                            missionId[i] = mission[i].getInt("mission_id");
-                            description[i] = mission[i].getString("description");
-                            chkBtn[i].setText(description[i]);
-                        }
-                    }
-                } catch (JSONException e) {
-                    Log.e("error", e.toString());
-                    e.printStackTrace();
                 }
+            } catch (JSONException e) {
+                Log.e("error", e.toString());
+                e.printStackTrace();
             }
         }
+    }
+
+    class Clear extends AsyncTask<Void, Void, JSONObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            JSONObject jobj = new JSONObject();
+            try {
+                jobj.put("card_number", nfcId);
+                jobj.put("password", password);
+                JSONArray check = new JSONArray();
+                for (int i = 0; i < 4; i++) {
+                    if (clear[i] = true && missionId[i] != -1)
+                        check.put(missionId[i]);
+                }
+                jobj.put("mission_ids", check);
+                Log.d("test", String.valueOf(jobj));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return postJsonObject("https://gungun.herokuapp.com/api/histories.json", jobj);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+            Log.d("start", String.valueOf(result));
+        }
+    }
 
 
     public JSONObject postJsonObject(String url, JSONObject loginJson) {

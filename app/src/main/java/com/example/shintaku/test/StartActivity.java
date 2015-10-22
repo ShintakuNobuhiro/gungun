@@ -12,10 +12,11 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        final SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
-        e.putString(getString(R.string.card_number), getString(R.string.password));
-        e.commit();
+        e.putString(getString(R.string.card_number1), getString(R.string.password1));
+        e.putString(getString(R.string.card_number2), getString(R.string.password2));
+        e.apply();
     }
 
     @Override

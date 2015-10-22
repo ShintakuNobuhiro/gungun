@@ -53,9 +53,8 @@ public class LevelActivity extends AppCompatActivity {
         SharedPreferences.Editor e = sp.edit();
         e.putString("nfc_id", nfcId);
         e.apply();
+        Log.d("",sp.getString(nfcId, ""));
         password = sp.getString(nfcId, "");
-        nfcId = getString(R.string.card_number);
-        password = getString(R.string.password);
         Log.d("nfc", nfcId+","+password);
 
         new Loader().execute();
@@ -184,12 +183,12 @@ public class LevelActivity extends AppCompatActivity {
                     TextView levelView[] = new TextView[lvlId.length];
                     ProgressBar progressBar[] = new ProgressBar[progId.length];
                     for (int i = 0; i < statuses.length(); i++) {
-                        Log.d("statues", String.valueOf(i));
+                        //Log.d("statues", String.valueOf(i));
                         progressBar[i] = (ProgressBar) findViewById(progId[i]);
                         progressBar[i].setMax(next[i]); // 水平プログレスバーの最大値を設定
                         levelView[i] = (TextView) findViewById(lvlId[i]);
                         levelView[i].setText("レベル"+ level[i]);
-                        Log.d("max", String.valueOf(progressBar[i].getMax()));
+                        //Log.d("max", String.valueOf(progressBar[i].getMax()));
 
                         // タイマーインスタンスを作成
                         timer = new Timer();
