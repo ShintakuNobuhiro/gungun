@@ -1,5 +1,6 @@
 package com.example.shintaku.test;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -35,6 +36,7 @@ public class MissionActivity extends AppCompatActivity {
     final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
     final String description[] = new String[4];
     final Button chkBtn[] = new Button[id.length];
+    int recentlevel[] = new int[missionId.length];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,11 @@ public class MissionActivity extends AppCompatActivity {
         }
         new Loader().execute();
 
+        // インテントを取得
+        Intent intent = getIntent();
+        // インテントに保存されたデータを取得
+        for(int i=0;i<recentlevel.length;i++)
+            recentlevel[i] = intent.getIntExtra("recentlevel" + i, 0);
 
         for (int i = 0; i < id.length; i++) {
             final int finalI = i;
@@ -81,8 +88,13 @@ public class MissionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
+                for(int i=0;i<recentlevel.length;i++)
+                    intent.putExtra("recentlevel"+i,recentlevel[i]);
                 new Clear().execute();
-                startActivity(intent);
+                // 返却したい結果ステータスをセットする
+                setResult(Activity.RESULT_OK, intent);
+                // アクティビティを終了させる
+                finish();
             }
         });
     }
@@ -168,7 +180,7 @@ public class MissionActivity extends AppCompatActivity {
 
 
     public JSONObject postJsonObject(String url, JSONObject loginJson) {
-        InputStream inputStream = null;
+        InputStream inputStream;
         String result = "";
         try {
             // 1. create HttpClient

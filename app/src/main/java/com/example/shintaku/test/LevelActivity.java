@@ -1,5 +1,6 @@
 package com.example.shintaku.test;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -37,10 +38,10 @@ public class LevelActivity extends AppCompatActivity {
 
     ProgressBar prog[] = new ProgressBar[4];
 
-    private MyTimerTask timerTask = null;
-    private Timer timer = null;
     private Handler handler = new Handler();
     String nfcId,password;
+    int recentlevel[] = new int[4];
+    int level[] = new int[recentlevel.length];//現在レベル
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,13 @@ public class LevelActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LevelActivity.this, MissionActivity.class);
-                startActivity(intent);
+                for(int i=0;i<recentlevel.length;i++) {
+                    recentlevel[i] = level[i];
+                    intent.putExtra("recentlevel"+i,recentlevel[i]);
+                }
+                int requestCode = 810;
+                // 返却値を考慮したActivityの起動を行う
+                startActivityForResult(intent, requestCode);
             }
         });
         //すごろくボタン
@@ -159,14 +166,13 @@ public class LevelActivity extends AppCompatActivity {
             if (result != null) {
                 try {
                     //パース
-
                     String[] name = {result.getString("name")};
                     JSONArray statuses = result.getJSONArray("statuses");
                     Log.d("length", String.valueOf(statuses.length()));
                     int recentExp[] = new int[statuses.length()];
                     int exp[] = new int[statuses.length()];//現在経験値
                     int next[] = new int[statuses.length()];//レベルアップに必要な経験値
-                    int level[] = new int[statuses.length()];//現在レベル
+
                     String category[] = new String[statuses.length()];
                     //ステータスの各項目分解、経験値の配列化
                     for (int i = 0; i < statuses.length(); i++) {
@@ -198,16 +204,21 @@ public class LevelActivity extends AppCompatActivity {
                         if(exp[i] >= recentExp[i])
                             progressBar[i].setProgress(recentExp[i]);
                         levelView[i] = (TextView) findViewById(lvlId[i]);
-                        levelView[i].setText("レベル"+ level[i]);
+                        Log.d("test", String.valueOf(recentlevel[i]));
+                        if(level[i] == recentlevel[i] || recentlevel[i] == 0)
+                            levelView[i].setText("レベル"+ level[i]);
+                        else
+                            levelView[i].setText("レベルアップ！！ レベル"+level[i]);
                         categoryView[i].setText(category[i]);
-                        //Log.d("max", String.valueOf(progressBar[i].getMax()));
 
+                        MyTimerTask timerTask;
+                        Timer timer;
                         // タイマーインスタンスを作成
                         timer = new Timer();
                         // タイマータスクインスタンスを作成
                         timerTask = new MyTimerTask();
                         // タイマースケジュールを設定
-                        timer.schedule(timerTask, 0, 200);
+                        timer.schedule(timerTask, 0, 300);
                         // カウンタを初期化して設定
                         prog[i] = progressBar[i];
                         maxCount[i] = exp[i];
@@ -288,5 +299,20 @@ public class LevelActivity extends AppCompatActivity {
 
         inputStream.close();
         return result;
+    }
+
+    public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
+        // startActivityForResult()の際に指定した識別コードとの比較
+        if( requestCode == 810 ){
+            // 返却結果ステータスとの比較
+            if( resultCode == Activity.RESULT_OK ) {
+                // 返却されてきたintentから値を取り出す
+                for(int i=0;i<recentlevel.length;i++) {
+                    recentlevel[i] = intent.getIntExtra("recentlevel" + i, 0);
+                    Log.d("level", String.valueOf(recentlevel[i]));
+                }
+            }
+        }
+        new Loader().execute();
     }
 }
