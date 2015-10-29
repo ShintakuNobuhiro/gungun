@@ -1,6 +1,7 @@
 package com.example.shintaku.test;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -42,6 +43,7 @@ public class LevelActivity extends AppCompatActivity {
     String nfcId,password;
     int recentlevel[] = new int[4];
     int level[] = new int[recentlevel.length];//現在レベル
+    int req;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +119,6 @@ public class LevelActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
     // タイマータスク用のクラス
     class MyTimerTask extends TimerTask {
 
@@ -138,10 +139,15 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     class Loader extends AsyncTask<Void, Void, JSONObject> {
-
+        ProgressDialog progressDialog = new ProgressDialog(LevelActivity.this);
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage(getString(R.string.loading));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
         }
 
         @Override
@@ -168,7 +174,6 @@ public class LevelActivity extends AppCompatActivity {
                     //パース
                     String[] name = {result.getString("name")};
                     JSONArray statuses = result.getJSONArray("statuses");
-                    Log.d("length", String.valueOf(statuses.length()));
                     int recentExp[] = new int[statuses.length()];
                     int exp[] = new int[statuses.length()];//現在経験値
                     int next[] = new int[statuses.length()];//レベルアップに必要な経験値
@@ -185,7 +190,7 @@ public class LevelActivity extends AppCompatActivity {
                     }
                     //名前の表示
                     final TextView nameTxt = (TextView) findViewById(R.id.name);
-                    nameTxt.setText(name[0]);
+                    nameTxt.setText("こんにちは\n"+name[0]+"さん");
 
                     int lvlId[] = {R.id.LevelView1,R.id.LevelView2,R.id.LevelView3,R.id.LevelView4};
 
@@ -197,14 +202,12 @@ public class LevelActivity extends AppCompatActivity {
                     TextView categoryView[] = new TextView[catId.length];
 
                     for (int i = 0; i < statuses.length(); i++) {
-                        //Log.d("statues", String.valueOf(i));
                         progressBar[i] = (ProgressBar) findViewById(progId[i]);
                         categoryView[i] = (TextView) findViewById(catId[i]);
                         progressBar[i].setMax(next[i]); // 水平プログレスバーの最大値を設定
                         if(exp[i] >= recentExp[i])
                             progressBar[i].setProgress(recentExp[i]);
                         levelView[i] = (TextView) findViewById(lvlId[i]);
-                        Log.d("test", String.valueOf(recentlevel[i]));
                         if(level[i] == recentlevel[i] || recentlevel[i] == 0)
                             levelView[i].setText("レベル"+ level[i]);
                         else
@@ -227,11 +230,58 @@ public class LevelActivity extends AppCompatActivity {
                     Log.e("error", e.toString());
                     e.printStackTrace();
                 }
-
             }
+            progressDialog.dismiss();
         }
 
     }
+
+    class levels extends AsyncTask<Void, Void, JSONObject> {
+        ProgressDialog progressDialog = new ProgressDialog(LevelActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage(getString(R.string.loading));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+
+            JSONObject jobj = new JSONObject();
+
+            try {
+                jobj.put("card_number", nfcId);
+                jobj.put("password", password);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return postJsonObject("https://gungun.herokuapp.com/api/levels.json", jobj);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+            Log.d("result", String.valueOf(result));
+            try {
+                JSONArray levels = result.getJSONArray("levels");
+                for(int i = 0; i<levels.length(); i++) {
+                    JSONObject level = levels.getJSONObject(i);
+                    req = level.getInt("required_experience");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            progressDialog.dismiss();
+        }
+
+    }
+
+
 
     public JSONObject postJsonObject(String url, JSONObject loginJobj){
         InputStream inputStream = null;
@@ -286,7 +336,6 @@ public class LevelActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         // 11. return result
-        Log.d("json",String.valueOf(json));
         return json;
     }
 
@@ -309,7 +358,6 @@ public class LevelActivity extends AppCompatActivity {
                 // 返却されてきたintentから値を取り出す
                 for(int i=0;i<recentlevel.length;i++) {
                     recentlevel[i] = intent.getIntExtra("recentlevel" + i, 0);
-                    Log.d("level", String.valueOf(recentlevel[i]));
                 }
             }
         }

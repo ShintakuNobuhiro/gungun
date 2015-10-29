@@ -1,6 +1,7 @@
 package com.example.shintaku.test;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -34,29 +35,36 @@ public class Setting2Activity extends AppCompatActivity {
     int level = 1; //現在の閲覧レベル
     int lvlMin = 1; //最低
     int lvlMax = 4; //最高
+    int maxPage = 1;
     final int firstPage = 1; //初期ページ
     int page = firstPage;
     int category = -1;
-
+    String genre[];
 
     String nfcId,password;
     ArrayList<Integer> mission_id = new ArrayList<>();
     ArrayList<String> description = new ArrayList<>();
+
+    public Setting2Activity() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting2);
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
-        nfcId = sp.getString("nfc_id","");
-        password = sp.getString(nfcId,"");
+        nfcId = sp.getString("nfc_id", "");
+        password = sp.getString(nfcId, "");
+        genre = new String[]{getString(R.string.genre1), getString(R.string.genre2), getString(R.string.genre3), getString(R.string.genre4)};
 
         //大項目名表示
         Settings tr = (Settings) getIntent().getSerializableExtra("genre");//大項目名のインテント間引き継ぎ
-        TextView a = (TextView)this.findViewById(R.id.textView);
+        TextView a = (TextView) this.findViewById(R.id.textView);
         category = Integer.parseInt(tr.getSetting(Settings.subject.TEXT));
-        final String genre[]= {getString(R.string.genre1), getString(R.string.genre2), getString(R.string.genre3), getString(R.string.genre4)};
 
-        if(category >= 0 || category <= 3) {
+
+        if (category >= 0 || category <= 3) {
             a.setText(genre[category]);
         } else {
             a.setText("error");
@@ -77,11 +85,9 @@ public class Setting2Activity extends AppCompatActivity {
             }
         });
 
-        final TextView pageTxt = (TextView) findViewById(R.id.page);
 
         //レベル上げ
         Button nextLevel = (Button) findViewById(R.id.nextLevel);
-        final TextView levelTxt = (TextView) findViewById(R.id.level);
         nextLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,9 +97,7 @@ public class Setting2Activity extends AppCompatActivity {
                     level = lvlMin;
                 }
                 Log.d("lv", String.valueOf(level));
-                levelTxt.setText("レベル" + String.valueOf(level));
                 page = firstPage;
-                pageTxt.setText("ページ" + String.valueOf(page));
                 new Loader().execute();
             }
         });
@@ -103,15 +107,13 @@ public class Setting2Activity extends AppCompatActivity {
         prevLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(level>lvlMin) {
+                if (level > lvlMin) {
                     level--;
                 } else {
                     level = lvlMax;
                 }
                 Log.d("lv", String.valueOf(level));
-                levelTxt.setText("レベル" + String.valueOf(level));
                 page = firstPage;
-                pageTxt.setText("ページ"+ String.valueOf(page));
                 new Loader().execute();
             }
         });
@@ -121,9 +123,14 @@ public class Setting2Activity extends AppCompatActivity {
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                page++;
+
+                if (page < maxPage) {
+                    page++;
+                } else {
+                    page = firstPage;
+                }
                 Log.d("page", String.valueOf(page));
-                pageTxt.setText("ページ" + String.valueOf(page));
+                mission_id.clear();
                 new Loader().execute();
             }
         });
@@ -133,36 +140,17 @@ public class Setting2Activity extends AppCompatActivity {
         prevPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(page > 1) {
+                if (page > 1) {
                     page--;
+                } else {
+                    page = maxPage;
                 }
                 Log.d("page", String.valueOf(page));
-                pageTxt.setText("ページ" + String.valueOf(page));
                 new Loader().execute();
             }
         });
+        Log.d("test", String.valueOf(mission_id.size()));
 
-        final Button mission[] = new Button[id.length];
-        for(int i=0; i<id.length; i++) {
-            mission[i] = (Button) findViewById(id[i]);
-            final int finalI = i;
-            mission[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Setting2Activity.this, SettingActivity.class);
-                    String text = mission[finalI].getText().toString();
-                    String id = String.valueOf(mission_id.get(finalI));
-
-                    intent.putExtra(String.valueOf(genre[category]), text);
-                    intent.putExtra("id",id);
-                    Log.d("text", String.valueOf(genre[category])+text);
-                    // 返却したい結果ステータスをセットする
-                    setResult(Activity.RESULT_OK, intent);
-                    // アクティビティを終了させる
-                    finish();
-                }
-            });
-        }
     }
 
 
@@ -189,10 +177,17 @@ public class Setting2Activity extends AppCompatActivity {
     }
 
     class Loader extends AsyncTask<Void, Void, JSONObject> {
+        ProgressDialog progressDialog = new ProgressDialog(Setting2Activity.this);
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage(getString(R.string.loading));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            mission_id.clear();
+            description.clear();
         }
 
         @Override
@@ -207,7 +202,7 @@ public class Setting2Activity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            int tmp = category+1;
+            int tmp = category + 1;
             String URL = "https://gungun.herokuapp.com/api/categories/" + tmp + ".json";
             return postJsonObject(URL, jobj);
         }
@@ -219,8 +214,6 @@ public class Setting2Activity extends AppCompatActivity {
 
             //パース準備
             try {
-                mission_id.clear();
-                description.clear();
                 String name = result.getString("name");
                 JSONArray levels = result.getJSONArray("levels");
                 //mission分解、説明の配列化
@@ -233,6 +226,14 @@ public class Setting2Activity extends AppCompatActivity {
                     description.add(mission.getString("description"));
                     //Log.d("description",i+","+description.get(i));
                 }
+                if (mission_id.size() % 5 == 0)
+                    maxPage = mission_id.size() / 5;
+                else
+                    maxPage = mission_id.size() / 5 + 1;
+                final TextView pageTxt = (TextView) findViewById(R.id.page);
+                final TextView levelTxt = (TextView) findViewById(R.id.level);
+                levelTxt.setText("レベル\n" + String.valueOf(level) + "/" + String.valueOf(lvlMax));
+                pageTxt.setText("ページ\n" + String.valueOf(page) + "/" + String.valueOf(maxPage));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -245,15 +246,41 @@ public class Setting2Activity extends AppCompatActivity {
                 int tmp = (page - 1) * id.length + i;
                 if (description.size() > tmp && tmp >= 0) {
                     Log.d("tmp", String.valueOf(tmp) + "," + String.valueOf(description.get(tmp)));
-                    Log.d("page",String.valueOf(level));
+                    Log.d("page", String.valueOf(level));
                     button[i].setText(String.valueOf(description.get(tmp)));
                 } else {
-                    button[i].setText("empty");
+                    button[i].setText(getText(R.string.empty));
                 }
             }
 
-        }
+            progressDialog.dismiss();
 
+            final Button mission[] = new Button[id.length];
+            for (int i = 0; i < id.length; i++) {
+
+                mission[i] = (Button) findViewById(id[i]);
+                final int index = id.length * (page - 1) + i;
+                final int finalI = i;
+                mission[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Setting2Activity.this, SettingActivity.class);
+                        String text = mission[finalI].getText().toString();
+                        if (index < mission_id.size()) {
+                            String id = String.valueOf(mission_id.get(index));
+                            Log.d("id", id);
+                            intent.putExtra(String.valueOf(genre[category]), text);
+                            intent.putExtra("id", id);
+                            Log.d("text", String.valueOf(genre[category]) + text);
+                            // 返却したい結果ステータスをセットする
+                            setResult(Activity.RESULT_OK, intent);
+                            // アクティビティを終了させる
+                            finish();
+                        }
+                    }
+                });
+            }
+        }
     }
 
     public JSONObject postJsonObject(String url, JSONObject loginJobj){

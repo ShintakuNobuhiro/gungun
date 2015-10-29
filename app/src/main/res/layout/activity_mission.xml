@@ -10,33 +10,35 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="テスト"
+        android:text="@string/genre1"
         android:id="@+id/checkButton"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/checkButton2"
         android:layout_toStartOf="@+id/checkButton2"
         android:layout_alignBottom="@+id/checkButton2"
         android:checked="false"
-        android:background="@color/blue" />
+        android:background="@color/blue"
+        android:textSize="30dp"
+        android:layout_alignParentTop="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="テスト2"
+        android:text="@string/genre2"
         android:id="@+id/checkButton2"
         android:width="300dp"
         android:height="250dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/checkButton3"
         android:layout_toEndOf="@+id/checkButton3"
-        android:background="@color/green" />
+        android:background="@color/green"
+        android:textSize="30dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="テスト3"
+        android:text="@string/empty"
         android:id="@+id/checkButton3"
         android:width="300dp"
         android:height="250dp"
@@ -48,7 +50,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="テスト4"
+        android:text="@string/empty"
         android:id="@+id/checkButton4"
         android:width="300dp"
         android:height="250dp"
@@ -61,14 +63,28 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="決定"
+        android:text="けってい"
         android:id="@+id/button2"
         android:width="200dp"
         android:height="100dp"
         android:layout_alignBottom="@+id/checkButton4"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textSize="50dp"
+        android:textSize="40dp"
         android:background="@color/blue" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="もどる"
+        android:id="@+id/button10"
+        android:width="200dp"
+        android:height="100dp"
+        android:textSize="40dp"
+        android:background="@color/blue"
+        android:layout_below="@+id/checkButton2"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_alignStart="@+id/button2"
+        android:layout_marginTop="18dp" />
 
 </RelativeLayout>

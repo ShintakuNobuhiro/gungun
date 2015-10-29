@@ -66,13 +66,26 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="決定"
+        android:text="けってい"
         android:id="@+id/button3"
         android:width="200dp"
         android:height="100dp"
-        android:textSize="50dp"
+        android:textSize="40dp"
         android:background="@color/blue"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="もどる"
+        android:id="@+id/button6"
+        android:width="200dp"
+        android:height="100dp"
+        android:textSize="40dp"
+        android:background="@color/blue"
+        android:layout_below="@+id/checkButton2"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 

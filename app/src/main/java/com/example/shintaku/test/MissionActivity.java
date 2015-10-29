@@ -74,27 +74,43 @@ public class MissionActivity extends AppCompatActivity {
                         clear[finalI] = true;
                         chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
                         chkBtn[finalI].setTextColor(getResources().getColor(R.color.white));
+                        chkBtn[finalI].setText("○\nできた\n\n"+description[finalI]);
                     } else {
                         clear[finalI] = false;
                         chkBtn[finalI].setBackgroundColor(chkOff[finalI]);
                         chkBtn[finalI].setTextColor(getResources().getColor(R.color.black));
+                        chkBtn[finalI].setText("×\nできなかった\n\n" + description[finalI]);
                     }
                     Log.d(String.valueOf(finalI), String.valueOf(clear[finalI]));
                 }
             });
         }
+
+
         Button btnNext = (Button) this.findViewById(R.id.button2);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
                 for(int i=0;i<recentlevel.length;i++)
-                    intent.putExtra("recentlevel"+i,recentlevel[i]);
+                    intent.putExtra("recentlevel" + i, recentlevel[i]);
                 new Clear().execute();
                 // 返却したい結果ステータスをセットする
                 setResult(Activity.RESULT_OK, intent);
                 // アクティビティを終了させる
                 finish();
+            }
+        });
+
+        //戻る
+        Button btn = (Button) this.findViewById(R.id.button10);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
             }
         });
     }
@@ -135,7 +151,7 @@ public class MissionActivity extends AppCompatActivity {
                         mission[i] = missions.getJSONObject(i);
                         missionId[i] = mission[i].getInt("mission_id");
                         description[i] = mission[i].getString("description");
-                        chkBtn[i].setText(description[i]);
+                        chkBtn[i].setText("×\nできなかった\n\n"+description[i]);
                     }
                 }
             } catch (JSONException e) {
@@ -160,7 +176,7 @@ public class MissionActivity extends AppCompatActivity {
                 jobj.put("password", password);
                 JSONArray check = new JSONArray();
                 for (int i = 0; i < 4; i++) {
-                    if (clear[i] = true && missionId[i] != -1)
+                    if (clear[i] == true && missionId[i] != -1)
                         check.put(missionId[i]);
                 }
                 jobj.put("mission_ids", check);

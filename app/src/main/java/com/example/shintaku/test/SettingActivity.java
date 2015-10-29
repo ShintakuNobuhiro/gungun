@@ -73,6 +73,17 @@ public class SettingActivity extends AppCompatActivity {
                 startActivityForResult(intent, requestCode);
             }
         });
+        //戻る
+        btn = (Button) this.findViewById(R.id.button6);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingActivity.this, LevelActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            }
+        });
 
         //決定
         btn = (Button) this.findViewById(R.id.button3);
@@ -211,19 +222,19 @@ public class SettingActivity extends AppCompatActivity {
                 // 返却されてきたintentから値を取り出す
 
                 Button btn;
-                if (intent.getStringExtra("健康") != null) {
-                    str[0] = intent.getStringExtra("健康");
+                if (intent.getStringExtra(getString(R.string.genre1)) != null) {
+                    str[0] = intent.getStringExtra(getString(R.string.genre1));
                     btn = (Button) findViewById(R.id.checkButton);
                     mission_id[0] = Integer.parseInt(intent.getStringExtra("id"));
-                    Log.d("健康",str[0]+","+mission_id[0]);
+                    Log.d(getString(R.string.genre1),str[0]+","+mission_id[0]);
                     btn.setText(str[0]);
                 }
-                else if (intent.getStringExtra("お友達/あいさつ") != null) {
-                    str[1] = intent.getStringExtra("お友達/あいさつ");
+                else if (intent.getStringExtra(getString(R.string.genre2)) != null) {
+                    str[1] = intent.getStringExtra(getString(R.string.genre2));
                     btn = (Button) findViewById(R.id.checkButton2);
                     btn.setText(str[1]);
                     mission_id[1] = Integer.parseInt(intent.getStringExtra("id"));
-                    Log.d("健康",str[1]+","+mission_id[1]);
+                    Log.d(getString(R.string.genre2),str[1]+","+mission_id[1]);
                 } else {
                     Log.e("Genre","error");
                 }

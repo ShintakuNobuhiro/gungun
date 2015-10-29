@@ -14,19 +14,22 @@
         android:text="ジャンル"
         android:id="@+id/textView"
         android:textSize="30dp"
-        android:background="@color/blue"
-        android:textColor="@color/white"
         android:password="false"
         android:phoneNumber="false"
         android:gravity="center"
         android:width="200dp"
         android:height="200dp"
-        android:theme="@style/Base.V11.Theme.AppCompat.Dialog"/>
+        android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
+        android:layout_alignBottom="@+id/mission2"
+        android:textColor="@color/black"
+        android:layout_alignRight="@+id/button5"
+        android:layout_alignEnd="@+id/button5"
+        android:background="@color/lightblue" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="戻る"
+        android:text="もどる"
         android:id="@+id/button5"
         android:width="200dp"
         android:height="100dp"
@@ -34,14 +37,15 @@
         android:background="@color/blue"
         android:textColor="@color/white"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
-        android:layout_alignBottom="@+id/mission5"
+        android:layout_alignTop="@+id/mission5"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/mission5" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/loading"
         android:id="@+id/mission1"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
@@ -50,12 +54,12 @@
         android:height="65dp"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
         android:background="@color/blue"
-        android:textSize="35dp" />
+        android:textSize="25dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/loading"
         android:id="@+id/mission2"
         android:width="600dp"
         android:height="65dp"
@@ -64,12 +68,12 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/mission1"
         android:layout_marginTop="40dp"
-        android:textSize="35dp" />
+        android:textSize="25dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/loading"
         android:id="@+id/mission3"
         android:width="600dp"
         android:height="65dp"
@@ -79,12 +83,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="40dp"
-        android:textSize="35dp" />
+        android:textSize="25dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/loading"
         android:id="@+id/mission4"
         android:width="600dp"
         android:height="65dp"
@@ -94,12 +98,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="40dp"
-        android:textSize="35dp" />
+        android:textSize="25dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/loading"
         android:id="@+id/mission5"
         android:width="600dp"
         android:height="65dp"
@@ -109,7 +113,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="40dp"
-        android:textSize="35dp" />
+        android:textSize="25dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -123,7 +127,8 @@
         android:gravity="center"
         android:layout_alignTop="@+id/nextLevel"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/mission3" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -135,23 +140,25 @@
         android:background="@color/blue"
         android:textSize="30dp"
         android:gravity="center"
-        android:layout_alignBottom="@+id/mission3"
+        android:layout_alignTop="@+id/mission3"
         android:layout_alignRight="@+id/textView"
-        android:layout_alignEnd="@+id/textView" />
+        android:layout_alignEnd="@+id/textView"
+        android:layout_above="@+id/mission4" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="レベル1"
+        android:text="レベル\n1/4"
         android:id="@+id/level"
-        android:layout_toRightOf="@+id/prevLevel"
-        android:layout_toStartOf="@+id/nextLevel"
         android:gravity="center"
         android:textSize="25dp"
-        android:layout_alignBottom="@+id/mission3"
+        android:textColor="@color/black"
         android:layout_alignTop="@+id/prevLevel"
-        android:textColor="@color/black" />
+        android:layout_toRightOf="@+id/prevLevel"
+        android:layout_toEndOf="@+id/prevLevel"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -163,24 +170,23 @@
         android:background="@color/blue"
         android:textSize="30dp"
         android:gravity="center"
-        android:layout_alignTop="@+id/mission4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignTop="@+id/page"
+        android:layout_toLeftOf="@+id/level"
+        android:layout_toStartOf="@+id/level"
+        android:layout_above="@+id/mission5" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="ページ1"
+        android:text="ページ\n1/6"
         android:id="@+id/page"
         android:gravity="center"
         android:textSize="25dp"
-        android:layout_alignTop="@+id/prevPage"
-        android:layout_toRightOf="@+id/prevPage"
-        android:layout_alignBottom="@+id/prevPage"
+        android:textColor="@color/black"
+        android:layout_above="@+id/mission5"
         android:layout_alignRight="@+id/level"
-        android:layout_alignEnd="@+id/level"
-        android:textColor="@color/black" />
+        android:layout_alignEnd="@+id/level" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -192,8 +198,9 @@
         android:background="@color/blue"
         android:textSize="30dp"
         android:gravity="center"
-        android:layout_alignTop="@+id/mission4"
-        android:layout_toRightOf="@+id/page"
-        android:layout_toEndOf="@+id/page" />
+        android:layout_alignTop="@+id/page"
+        android:layout_alignRight="@+id/button5"
+        android:layout_alignEnd="@+id/button5"
+        android:layout_alignBottom="@+id/page" />
 
 </RelativeLayout>

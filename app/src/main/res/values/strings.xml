@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">ぐんぐん</string>
 
     <string name="start">カードをタッチしてね</string>
     <string name="action_settings">Settings</string>
@@ -10,9 +10,12 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_sugoroku">SugorokuActivity</string>
     <string name="title_activity_setting2">Setting2Activity</string>
-    <string name="genre1">健康</string>
-    <string name="genre2">お友達/あいさつ</string>
-    <string name="genre3">運動とお仕事</string>
-    <string name="genre4">暮らし</string>
+    <string name="genre1">けんこう</string>
+    <string name="genre2">お友だちと\nあいさつ</string>
+    <string name="genre3">うんどうと\nおしごと</string>
+    <string name="genre4">くらし</string>
     <string name="title_activity_submit">submitActivity</string>
+    <string name="test">このがめんに、\nゲームがつくよていです。\n\nほんばんをお楽しみに！</string>
+    <string name="loading">よみこみちゅう</string>
+    <string name="empty"></string>
 </resources>

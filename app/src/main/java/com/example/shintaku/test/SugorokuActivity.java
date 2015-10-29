@@ -1,6 +1,7 @@
 package com.example.shintaku.test;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -9,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import org.apache.http.HttpResponse;
@@ -36,6 +39,18 @@ public class SugorokuActivity extends AppCompatActivity {
         nfcId = sp.getString("nfc_id","");
         password = sp.getString(nfcId,"");
         new Loader().execute();
+        //戻る
+        Button btn;
+        btn = (Button) this.findViewById(R.id.button7);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SugorokuActivity.this, LevelActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            }
+        });
     }
 
     // Frameアニメーション
@@ -83,7 +98,7 @@ public class SugorokuActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             super.onPostExecute(result);
             Log.d("result", String.valueOf(result));
-            if (result != null) {
+/*            if (result != null) {
                 try {
                     //パース
                     String[] name = {result.getString("name")};
@@ -131,7 +146,7 @@ public class SugorokuActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-            }
+            }*/
         }
 
     }
