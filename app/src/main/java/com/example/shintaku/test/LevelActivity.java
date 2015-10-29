@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,10 +44,11 @@ public class LevelActivity extends AppCompatActivity {
     String nfcId,password;
     int recentlevel[] = new int[4];
     int level[] = new int[recentlevel.length];//現在レベル
-    int req;
+    ArrayList<Integer> requireExp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requireExp = new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
         final SharedPreferences sp = getSharedPreferences("data",MODE_PRIVATE);
@@ -58,7 +60,7 @@ public class LevelActivity extends AppCompatActivity {
         e.apply();
         Log.d("", sp.getString(nfcId, ""));
         password = sp.getString(nfcId, "");
-        Log.d("nfc", nfcId+","+password);
+        Log.d("nfc", nfcId + "," + password);
 
         new Loader().execute();
 
@@ -143,7 +145,7 @@ public class LevelActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+            new Levels().execute();
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setMessage(getString(R.string.loading));
             progressDialog.setCancelable(false);
@@ -168,7 +170,6 @@ public class LevelActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONObject result) {
             super.onPostExecute(result);
-            Log.d("result", String.valueOf(result));
             if (result != null) {
                 try {
                     //パース
@@ -204,9 +205,10 @@ public class LevelActivity extends AppCompatActivity {
                     for (int i = 0; i < statuses.length(); i++) {
                         progressBar[i] = (ProgressBar) findViewById(progId[i]);
                         categoryView[i] = (TextView) findViewById(catId[i]);
-                        progressBar[i].setMax(next[i]); // 水平プログレスバーの最大値を設定
+                        Log.d("exp"+i,next[i]+","+requireExp.get(level[i]-1)+","+exp[i]);
+                        progressBar[i].setMax(next[i]-requireExp.get(level[i]-1)); // 水平プログレスバーの最大値を設定
                         if(exp[i] >= recentExp[i])
-                            progressBar[i].setProgress(recentExp[i]);
+                            progressBar[i].setProgress(recentExp[i]-requireExp.get(level[i]-1));
                         levelView[i] = (TextView) findViewById(lvlId[i]);
                         if(level[i] == recentlevel[i] || recentlevel[i] == 0)
                             levelView[i].setText("レベル"+ level[i]);
@@ -224,7 +226,9 @@ public class LevelActivity extends AppCompatActivity {
                         timer.schedule(timerTask, 0, 300);
                         // カウンタを初期化して設定
                         prog[i] = progressBar[i];
-                        maxCount[i] = exp[i];
+                        maxCount[i] = exp[i]-requireExp.get(level[i]-1);
+                        count[i] = 0;
+                        Log.d("progress"+i,next[i]-requireExp.get(level[i]-1)+","+maxCount[i]);
                     }
                 } catch (JSONException e) { //JSONObject等例外発生時
                     Log.e("error", e.toString());
@@ -236,12 +240,14 @@ public class LevelActivity extends AppCompatActivity {
 
     }
 
-    class levels extends AsyncTask<Void, Void, JSONObject> {
+    class Levels extends AsyncTask<Void, Void, JSONArray> {
         ProgressDialog progressDialog = new ProgressDialog(LevelActivity.this);
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+            if(requireExp != null) {
+                requireExp.clear();
+            }
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setMessage(getString(R.string.loading));
             progressDialog.setCancelable(false);
@@ -249,7 +255,7 @@ public class LevelActivity extends AppCompatActivity {
         }
 
         @Override
-        protected JSONObject doInBackground(Void... params) {
+        protected JSONArray doInBackground(Void... params) {
 
             JSONObject jobj = new JSONObject();
 
@@ -260,18 +266,13 @@ public class LevelActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return postJsonObject("https://gungun.herokuapp.com/api/levels.json", jobj);
+            return postJsonArray("https://gungun.herokuapp.com/api/levels.json", jobj);
         }
 
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-            Log.d("result", String.valueOf(result));
+        protected void onPostExecute(JSONArray result) {
             try {
-                JSONArray levels = result.getJSONArray("levels");
-                for(int i = 0; i<levels.length(); i++) {
-                    JSONObject level = levels.getJSONObject(i);
-                    req = level.getInt("required_experience");
+                for(int i = 0; i<20; i++) {
+                    requireExp.add(result.getJSONObject(i).getInt("required_experience"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -332,6 +333,62 @@ public class LevelActivity extends AppCompatActivity {
         JSONObject json = null;
         try {
             json = new JSONObject(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // 11. return result
+        return json;
+    }
+
+    public JSONArray postJsonArray(String url, JSONObject loginJobj){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // 1. create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // 2. make POST request to the given URL
+
+            HttpPost httpPost = new HttpPost(url);
+
+            System.out.println(url);
+            String json = "";
+
+            // 4. convert JSONObject to JSON to String
+
+            json = loginJobj.toString();
+
+            System.out.println(json);
+            // 5. set json to StringEntity
+            StringEntity se = new StringEntity(json);
+
+            // 6. set httpPost Entity
+            httpPost.setEntity(se);
+
+            // 7. Set some headers to inform server about the type of the content
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+
+            // 8. Execute POST request to the given URL
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            // 9. receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // 10. convert inputstream to string
+            if(inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        JSONArray json = null;
+        try {
+            json = new JSONArray(result);
         } catch (JSONException e) {
             e.printStackTrace();
         }
