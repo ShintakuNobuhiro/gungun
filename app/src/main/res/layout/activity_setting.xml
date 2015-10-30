@@ -15,17 +15,18 @@
         android:checked="false"
         android:background="@color/blue"
         android:textSize="35dp"
-        android:height="300dp"
+        android:height="250dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/checkButton2"
-        android:layout_above="@+id/checkButton3"
-        android:layout_toLeftOf="@+id/checkButton2" />
+        android:layout_toLeftOf="@+id/checkButton2"
+        android:layout_above="@+id/checkButton3" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:id="@+id/checkButton2"
         android:width="300dp"
         android:height="250dp"
@@ -86,6 +87,21 @@
         android:textSize="40dp"
         android:background="@color/blue"
         android:layout_below="@+id/checkButton2"
+        android:layout_alignLeft="@+id/button3"
+        android:layout_alignStart="@+id/button3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="きょうの\nもくひょう"
+        android:id="@+id/textView9"
+        android:textSize="35dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:layout_above="@+id/button6"
+        android:layout_alignLeft="@+id/button6"
+        android:layout_alignStart="@+id/button6"
+        android:layout_marginBottom="75dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 

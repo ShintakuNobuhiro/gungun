@@ -172,6 +172,7 @@ public class LevelActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (result != null) {
                 try {
+                    Log.d("json",String.valueOf(result));
                     //パース
                     String[] name = {result.getString("name")};
                     JSONArray statuses = result.getJSONArray("statuses");

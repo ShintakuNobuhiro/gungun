@@ -14,8 +14,16 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
-        e.putString(getString(R.string.card_number1), getString(R.string.password1));
-        e.putString(getString(R.string.card_number2), getString(R.string.password2));
+        // IDとパスワード動的内部設定
+        for(int i=1;; i++) {
+            int resourceCardId = getResources().getIdentifier("card_number" + String.valueOf(i), "string", getPackageName());
+            int resourcePassword = getResources().getIdentifier("password" + String.valueOf(i), "string", getPackageName());
+            if(resourceCardId == 0) break;
+            // リソースを取得
+            String card_id = getResources().getString(resourceCardId);
+            String password = getResources().getString(resourcePassword);
+            e.putString(card_id, password);
+        }
         e.apply();
     }
 

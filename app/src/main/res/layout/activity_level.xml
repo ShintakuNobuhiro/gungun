@@ -29,7 +29,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="課題選択"
         android:id="@+id/button4"
         android:background="@color/blue"
         android:layout_marginTop="40dp"
@@ -41,12 +40,13 @@
         android:width="300dp"
         android:height="100dp"
         android:layout_alignRight="@+id/button8"
-        android:layout_alignEnd="@+id/button8" />
+        android:layout_alignEnd="@+id/button8"
+        android:text="もくひょう" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="チェック"
+        android:text="がんばり"
         android:id="@+id/button8"
         android:background="@color/blue"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
@@ -61,7 +61,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="すごろく"
+        android:text="ゲーム(近日公開)"
         android:id="@+id/button9"
         android:background="@color/blue"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"
@@ -221,7 +221,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="ぐんぐんテスト開発版"
+        android:text="ぐんぐん(テスト開発版)"
         android:id="@+id/textView8"
         android:textSize="30dp"
         android:textColor="@color/black"

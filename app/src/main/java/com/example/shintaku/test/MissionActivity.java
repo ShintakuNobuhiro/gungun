@@ -1,9 +1,11 @@
 package com.example.shintaku.test;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -49,6 +51,7 @@ public class MissionActivity extends AppCompatActivity {
         Log.d("nfc", nfcId + "," + password);
 
         final int[] chkOn = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.orange), getResources().getColor(R.color.red)};
+        final int[] chkOnId = {R.drawable.category1,R.drawable.category2};
         final int[] chkOff = new int[]{getResources().getColor(R.color.lightblue), getResources().getColor(R.color.lightgreen), getResources().getColor(R.color.lightorange), getResources().getColor(R.color.lightred)};
 
         for (int i = 0; i < id.length; i++) {
@@ -68,18 +71,23 @@ public class MissionActivity extends AppCompatActivity {
         for (int i = 0; i < id.length; i++) {
             final int finalI = i;
             chkBtn[i].setOnClickListener(new View.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void onClick(View v) {
                     if (!clear[finalI]) {
                         clear[finalI] = true;
-                        chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
+                        /*if(finalI < 2) {
+                            chkBtn[finalI].setBackground(getDrawable(chkOnId[finalI]));
+                        }
+                        else*/
+                            chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
                         chkBtn[finalI].setTextColor(getResources().getColor(R.color.white));
                         chkBtn[finalI].setText("○\nできた\n\n"+description[finalI]);
                     } else {
                         clear[finalI] = false;
                         chkBtn[finalI].setBackgroundColor(chkOff[finalI]);
                         chkBtn[finalI].setTextColor(getResources().getColor(R.color.black));
-                        chkBtn[finalI].setText("×\nできなかった\n\n" + description[finalI]);
+                        chkBtn[finalI].setText("\n\n\n" + description[finalI]);
                     }
                     Log.d(String.valueOf(finalI), String.valueOf(clear[finalI]));
                 }
@@ -151,7 +159,7 @@ public class MissionActivity extends AppCompatActivity {
                         mission[i] = missions.getJSONObject(i);
                         missionId[i] = mission[i].getInt("mission_id");
                         description[i] = mission[i].getString("description");
-                        chkBtn[i].setText("×\nできなかった\n\n"+description[i]);
+                        chkBtn[i].setText("\n\n\n"+description[i]);
                     }
                 }
             } catch (JSONException e) {
