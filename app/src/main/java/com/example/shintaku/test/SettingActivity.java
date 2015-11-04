@@ -30,7 +30,7 @@ import java.io.InputStreamReader;
 public class SettingActivity extends AppCompatActivity {
     final String str[] = new String[4];
     final int[] mission_id = new int[2];
-    String nfcId,password;
+    String nfcId,password,URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class SettingActivity extends AppCompatActivity {
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         nfcId = sp.getString("nfc_id","");
         password = sp.getString(nfcId, "");
+        URL = sp.getString("URL","");
         Log.d("nfc", nfcId + "," + password);
 
 
@@ -119,7 +120,7 @@ public class SettingActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-             return postJsonObject("https://gungun.herokuapp.com/api/assigns.json", jobj);
+             return postJsonObject(URL+"/api/assigns.json", jobj);
         }
 
         @Override

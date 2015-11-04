@@ -18,4 +18,6 @@
     <string name="test">このがめんに、\nゲームがつくよていです。\n\nほんばんをお楽しみに！</string>
     <string name="loading">よみこみちゅう</string>
     <string name="empty"></string>
+
+    <string name="url">https://gungun-staging.herokuapp.com</string>
 </resources>

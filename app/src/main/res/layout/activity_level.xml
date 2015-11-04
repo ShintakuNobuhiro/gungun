@@ -41,12 +41,12 @@
         android:height="100dp"
         android:layout_alignRight="@+id/button8"
         android:layout_alignEnd="@+id/button8"
-        android:text="もくひょう" />
+        android:text="もくひょうをきめる" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="がんばり"
+        android:text="できたことを\nかくにんする"
         android:id="@+id/button8"
         android:background="@color/blue"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"

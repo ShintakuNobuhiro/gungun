@@ -24,6 +24,7 @@ public class StartActivity extends AppCompatActivity {
             String password = getResources().getString(resourcePassword);
             e.putString(card_id, password);
         }
+        e.putString("URL",getResources().getString(R.string.url));
         e.apply();
     }
 

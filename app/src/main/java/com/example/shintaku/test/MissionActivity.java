@@ -2,11 +2,13 @@ package com.example.shintaku.test;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -33,7 +35,7 @@ public class MissionActivity extends AppCompatActivity {
 
     boolean clear[] = new boolean[4]; //達成状況の保存
     final int missionId[] = {-1,-1,-1,-1};
-    String nfcId,password;
+    String nfcId,password,URL;
 
     final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
     final String description[] = new String[4];
@@ -48,6 +50,7 @@ public class MissionActivity extends AppCompatActivity {
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         nfcId = sp.getString("nfc_id","");
         password = sp.getString(nfcId, "");
+        URL = sp.getString("URL","");
         Log.d("nfc", nfcId + "," + password);
 
         final int[] chkOn = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.orange), getResources().getColor(R.color.red)};
@@ -99,14 +102,34 @@ public class MissionActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
-                for(int i=0;i<recentlevel.length;i++)
-                    intent.putExtra("recentlevel" + i, recentlevel[i]);
-                new Clear().execute();
-                // 返却したい結果ステータスをセットする
-                setResult(Activity.RESULT_OK, intent);
-                // アクティビティを終了させる
-                finish();
+                // 確認ダイアログの生成
+                AlertDialog.Builder alertDlg = new AlertDialog.Builder(MissionActivity.this);
+                alertDlg.setTitle("ちゃんとできましたか？");
+                alertDlg.setMessage("まちがったら「いいえ、もどる」をおしてね");
+                alertDlg.setPositiveButton(
+                        "だいじょうぶ！ちゃんとできた！",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
+                                for (int i = 0; i < recentlevel.length; i++)
+                                    intent.putExtra("recentlevel" + i, recentlevel[i]);
+                                new Clear().execute();
+                                // 返却したい結果ステータスをセットする
+                                setResult(Activity.RESULT_OK, intent);
+                                // アクティビティを終了させる
+                                finish();
+                            }
+                        });
+                alertDlg.setNegativeButton(
+                        "いいえ、もどる",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Cancel ボタンクリック処理(消すだけ)
+                            }
+                        });
+
+                // 表示
+                alertDlg.create().show();
             }
         });
 
@@ -139,7 +162,7 @@ public class MissionActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-             return postJsonObject("https://gungun.herokuapp.com/api/users/"+nfcId+".json", jobj);
+             return postJsonObject(URL+"/api/users/"+nfcId+".json", jobj);
         }
 
         @Override
@@ -192,7 +215,7 @@ public class MissionActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return postJsonObject("https://gungun.herokuapp.com/api/histories.json", jobj);
+            return postJsonObject(URL+"/api/histories.json", jobj);
         }
 
         @Override

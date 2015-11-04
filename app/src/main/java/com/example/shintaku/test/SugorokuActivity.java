@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class SugorokuActivity extends AppCompatActivity {
-    String nfcId,password;
+    String nfcId,password,URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,7 @@ public class SugorokuActivity extends AppCompatActivity {
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         nfcId = sp.getString("nfc_id","");
         password = sp.getString(nfcId,"");
+        URL = sp.getString("URL","");
         new Loader().execute();
         //戻る
         Button btn;
@@ -91,7 +92,7 @@ public class SugorokuActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return postJsonObject("https://gungun.herokuapp.com/api/users/"+nfcId+".json", jobj);
+            return postJsonObject(URL+"/api/users/"+nfcId+".json", jobj);
         }
 
         @Override

@@ -1,7 +1,6 @@
 package com.example.shintaku.test;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -41,7 +40,7 @@ public class LevelActivity extends AppCompatActivity {
     ProgressBar prog[] = new ProgressBar[4];
 
     private Handler handler = new Handler();
-    String nfcId,password;
+    String nfcId,password,URL;
     int recentlevel[] = new int[4];
     int level[] = new int[recentlevel.length];//現在レベル
     ArrayList<Integer> requireExp;
@@ -60,6 +59,7 @@ public class LevelActivity extends AppCompatActivity {
         e.apply();
         Log.d("", sp.getString(nfcId, ""));
         password = sp.getString(nfcId, "");
+        URL = sp.getString("URL","");
         Log.d("nfc", nfcId + "," + password);
 
         new Loader().execute();
@@ -98,6 +98,12 @@ public class LevelActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Loader().execute();
     }
 
     @Override
@@ -141,15 +147,10 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     class Loader extends AsyncTask<Void, Void, JSONObject> {
-        ProgressDialog progressDialog = new ProgressDialog(LevelActivity.this);
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             new Levels().execute();
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage(getString(R.string.loading));
-            progressDialog.setCancelable(false);
-            progressDialog.show();
         }
 
         @Override
@@ -164,7 +165,7 @@ public class LevelActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return postJsonObject("https://gungun.herokuapp.com/api/users/"+nfcId+".json", jobj);
+            return postJsonObject(URL+"/api/users/"+nfcId+".json", jobj);
         }
 
         @Override
@@ -206,7 +207,6 @@ public class LevelActivity extends AppCompatActivity {
                     for (int i = 0; i < statuses.length(); i++) {
                         progressBar[i] = (ProgressBar) findViewById(progId[i]);
                         categoryView[i] = (TextView) findViewById(catId[i]);
-                        Log.d("exp"+i,next[i]+","+requireExp.get(level[i]-1)+","+exp[i]);
                         progressBar[i].setMax(next[i]-requireExp.get(level[i]-1)); // 水平プログレスバーの最大値を設定
                         if(exp[i] >= recentExp[i])
                             progressBar[i].setProgress(recentExp[i]-requireExp.get(level[i]-1));
@@ -229,30 +229,35 @@ public class LevelActivity extends AppCompatActivity {
                         prog[i] = progressBar[i];
                         maxCount[i] = exp[i]-requireExp.get(level[i]-1);
                         count[i] = 0;
-                        Log.d("progress"+i,next[i]-requireExp.get(level[i]-1)+","+maxCount[i]);
+                        Log.d("progress" + i, next[i] - requireExp.get(level[i] - 1) + "," + maxCount[i]);
+                    }
+
+                    JSONArray missions;
+                    missions = result.getJSONArray("assigns");
+                    //assign無しなら中ボタン無効に
+                    Button btn = (Button) findViewById(R.id.button8);
+                    if(missions.length()==0) {
+                        btn.setEnabled(false);
+                    } else {
+                        btn.setEnabled(true);
                     }
                 } catch (JSONException e) { //JSONObject等例外発生時
                     Log.e("error", e.toString());
                     e.printStackTrace();
                 }
             }
-            progressDialog.dismiss();
         }
 
     }
 
     class Levels extends AsyncTask<Void, Void, JSONArray> {
-        ProgressDialog progressDialog = new ProgressDialog(LevelActivity.this);
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(requireExp != null) {
+            if (requireExp != null) {
                 requireExp.clear();
             }
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage(getString(R.string.loading));
-            progressDialog.setCancelable(false);
-            progressDialog.show();
         }
 
         @Override
@@ -267,23 +272,19 @@ public class LevelActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return postJsonArray("https://gungun.herokuapp.com/api/levels.json", jobj);
+            return postJsonArray(URL + "/api/levels.json", jobj);
         }
 
         protected void onPostExecute(JSONArray result) {
             try {
-                for(int i = 0; i<20; i++) {
+                for (int i = 0; i < 20; i++) {
                     requireExp.add(result.getJSONObject(i).getInt("required_experience"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            progressDialog.dismiss();
         }
-
-    }
-
-
+}
 
     public JSONObject postJsonObject(String url, JSONObject loginJobj){
         InputStream inputStream = null;
@@ -410,11 +411,11 @@ public class LevelActivity extends AppCompatActivity {
 
     public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
         // startActivityForResult()の際に指定した識別コードとの比較
-        if( requestCode == 810 ){
+        if (requestCode == 810) {
             // 返却結果ステータスとの比較
-            if( resultCode == Activity.RESULT_OK ) {
+            if (resultCode == Activity.RESULT_OK) {
                 // 返却されてきたintentから値を取り出す
-                for(int i=0;i<recentlevel.length;i++) {
+                for (int i = 0; i < recentlevel.length; i++) {
                     recentlevel[i] = intent.getIntExtra("recentlevel" + i, 0);
                 }
             }

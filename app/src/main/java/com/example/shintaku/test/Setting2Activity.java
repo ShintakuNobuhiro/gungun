@@ -41,7 +41,7 @@ public class Setting2Activity extends AppCompatActivity {
     int category = -1;
     String genre[];
 
-    String nfcId,password;
+    String nfcId,password,URL;
     ArrayList<Integer> mission_id = new ArrayList<>();
     ArrayList<String> description = new ArrayList<>();
 
@@ -56,6 +56,7 @@ public class Setting2Activity extends AppCompatActivity {
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         nfcId = sp.getString("nfc_id", "");
         password = sp.getString(nfcId, "");
+        URL = sp.getString("URL","");
         genre = new String[]{getString(R.string.genre1), getString(R.string.genre2), getString(R.string.genre3), getString(R.string.genre4)};
 
         //大項目名表示
@@ -203,8 +204,7 @@ public class Setting2Activity extends AppCompatActivity {
                 e.printStackTrace();
             }
             int tmp = category + 1;
-            String URL = "https://gungun.herokuapp.com/api/categories/" + tmp + ".json";
-            return postJsonObject(URL, jobj);
+            return postJsonObject(URL+"/api/categories/"+tmp+".json", jobj);
         }
 
         @Override
@@ -214,7 +214,6 @@ public class Setting2Activity extends AppCompatActivity {
 
             //パース準備
             try {
-                String name = result.getString("name");
                 JSONArray levels = result.getJSONArray("levels");
                 //mission分解、説明の配列化
                 JSONObject lvl = levels.getJSONObject(level - 1);
