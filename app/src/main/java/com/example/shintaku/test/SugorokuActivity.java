@@ -1,18 +1,12 @@
 package com.example.shintaku.test;
 
-import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -26,10 +20,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SugorokuActivity extends AppCompatActivity {
     String nfcId,password,URL;
+    int cell,recent_cell;
+    // view(「view」オブジェクトを格納する変数)の宣言
+    private View view;
+
+    // ハンドラを作成
+    private Handler handler = new Handler();
+    // ビューの再描画間隔(ミリ秒)
+    private final static long MSEC = 15;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,37 +44,9 @@ public class SugorokuActivity extends AppCompatActivity {
         password = sp.getString(nfcId,"");
         URL = sp.getString("URL","");
         new Loader().execute();
-        //戻る
-        Button btn;
-        btn = (Button) this.findViewById(R.id.button7);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SugorokuActivity.this, LevelActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            }
-        });
-    }
 
-    // Frameアニメーション
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    void frameAnimationTest(ImageView img){
-        AnimationDrawable anim = new AnimationDrawable();
-        ArrayList<Drawable> frame = new ArrayList<>();
 
-        // 画像の読み込み //
-        for(int i=0;i<5;i++) {
-            frame.add(getResources().getDrawable(getResources().getIdentifier("image" + i, "drawable", getPackageName())));
-            anim.addFrame(frame.get(i),  300);
-        }
-        // 繰り返し設定
-        anim.setOneShot(false);
-        // 画像にアニメーションを設定
-        img.setBackground(anim);
-        // アニメーション開始
-        anim.start();
+
     }
 
     class Loader extends AsyncTask<Void, Void, JSONObject> {
@@ -99,55 +75,39 @@ public class SugorokuActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             super.onPostExecute(result);
             Log.d("result", String.valueOf(result));
-/*            if (result != null) {
+            if (result != null) {
                 try {
                     //パース
-                    String[] name = {result.getString("name")};
+                    recent_cell = result.getInt("recent_cell");
+                    cell = result.getInt("cell");
+                    cell = 10;
+                    // 「GameView」オブジェクト(ビュー)の作成
+                    view = new GameView(SugorokuActivity.this,0,cell);
 
-                    AnimationDrawable anim = new AnimationDrawable();
-                    ArrayList<Drawable> frame = new ArrayList<>();
-                    ArrayList<Integer> id = new ArrayList<>();
-                    int j = 0;
-                    while(getResources().getIdentifier("image" + j, "drawable", getPackageName()) != 0) {
-                        id.add(getResources().getIdentifier("image" + j, "drawable", getPackageName()));
-                        j++;
-                    }
+                    // アクティビティにビューを組み込む
+                    setContentView(view);
 
-                    int sumCell = id.size();
-                    int recentCell = result.getInt("recent_cell")%sumCell;
-                    int cell = result.getInt("cell")%sumCell;
-
-
-                    // 画像の読み込み //
-                    int dCell = cell - recentCell;
-                    Log.d("", String.valueOf(recentCell)+","+String.valueOf(cell)+","+String.valueOf(dCell));
-                    int interval;
-                    if(recentCell<cell) {
-                        for (int i = 0; i < dCell; i++) {
-                            frame.add(getResources().getDrawable(id.get(recentCell + i)));
-                            if (i == 0)
-                                interval = 1000;
-                            else
-                                interval = 500;
-                            anim.addFrame(frame.get(i), interval);
+                    // ビュー再描画タイマー
+                    // タイマーを作成
+                    Timer timer = new Timer(false);
+                    // 「MSEC」ミリ秒おきにタスク(TimerTask)を実行
+                    timer.schedule(new TimerTask() {
+                        public void run() {
+                            handler.post(new Runnable() {
+                                public void run() {
+                                    // ビューを再描画
+                                    view.invalidate();
+                                }
+                            });
                         }
-                    } else {
-                        frame.add(getResources().getDrawable(id.get(cell)));
-                        anim.addFrame(frame.get(0),500);
-                    }
-                    // 繰り返し設定
-                    anim.setOneShot(true);
-                    // 画像にアニメーションを設定
-                    ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                    imageView.setBackground(anim);
-                    // アニメーション開始
-                    anim.start();
+                    }, 0, MSEC);
+
                 } catch (JSONException e) { //JSONObject等例外発生時
                     Log.e("error", e.toString());
                     e.printStackTrace();
                 }
 
-            }*/
+            }
         }
 
     }
