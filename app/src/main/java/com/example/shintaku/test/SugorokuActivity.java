@@ -78,11 +78,10 @@ public class SugorokuActivity extends AppCompatActivity {
             if (result != null) {
                 try {
                     //パース
-                    recent_cell = result.getInt("recent_cell");
-                    cell = result.getInt("cell");
-                    cell = 10;
+                    recent_cell = (int)result.getDouble("recent_cell");
+                    cell = (int)result.getDouble("cell");
                     // 「GameView」オブジェクト(ビュー)の作成
-                    view = new GameView(SugorokuActivity.this,0,cell);
+                    view = new GameView(SugorokuActivity.this,recent_cell,cell);
 
                     // アクティビティにビューを組み込む
                     setContentView(view);

@@ -61,7 +61,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ゲーム(近日公開)"
+        android:text="ゲーム"
         android:id="@+id/button9"
         android:background="@color/blue"
         android:theme="@style/Base.V11.Theme.AppCompat.Dialog"

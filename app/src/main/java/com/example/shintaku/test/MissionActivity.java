@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -34,8 +35,8 @@ import java.io.InputStreamReader;
 public class MissionActivity extends AppCompatActivity {
 
     boolean clear[] = new boolean[4]; //達成状況の保存
-    final int missionId[] = {-1,-1,-1,-1};
-    String nfcId,password,URL;
+    final int missionId[] = {-1, -1, -1, -1};
+    String nfcId, password, URL;
 
     final int id[] = {R.id.checkButton, R.id.checkButton2, R.id.checkButton3, R.id.checkButton4};
     final String description[] = new String[4];
@@ -48,13 +49,13 @@ public class MissionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mission);
 
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
-        nfcId = sp.getString("nfc_id","");
+        nfcId = sp.getString("nfc_id", "");
         password = sp.getString(nfcId, "");
-        URL = sp.getString("URL","");
+        URL = sp.getString("URL", "");
         Log.d("nfc", nfcId + "," + password);
 
         final int[] chkOn = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.orange), getResources().getColor(R.color.red)};
-        final int[] chkOnId = {R.drawable.category1,R.drawable.category2};
+        final int[] chkOnId = {R.drawable.category1, R.drawable.category2};
         final int[] chkOff = new int[]{getResources().getColor(R.color.lightblue), getResources().getColor(R.color.lightgreen), getResources().getColor(R.color.lightorange), getResources().getColor(R.color.lightred)};
 
         for (int i = 0; i < id.length; i++) {
@@ -68,7 +69,7 @@ public class MissionActivity extends AppCompatActivity {
         // インテントを取得
         Intent intent = getIntent();
         // インテントに保存されたデータを取得
-        for(int i=0;i<recentlevel.length;i++)
+        for (int i = 0; i < recentlevel.length; i++)
             recentlevel[i] = intent.getIntExtra("recentlevel" + i, 0);
 
         for (int i = 0; i < id.length; i++) {
@@ -83,14 +84,20 @@ public class MissionActivity extends AppCompatActivity {
                             chkBtn[finalI].setBackground(getDrawable(chkOnId[finalI]));
                         }
                         else*/
-                            chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
+                        chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
                         chkBtn[finalI].setTextColor(getResources().getColor(R.color.white));
-                        chkBtn[finalI].setText("○\nできた\n\n"+description[finalI]);
+                        if (description[finalI] != null)
+                            chkBtn[finalI].setText("○\nできた\n\n" + description[finalI]);
+                        else
+                            chkBtn[finalI].setText("\n\n\n" + "やることをせっていしていないよ");
                     } else {
                         clear[finalI] = false;
                         chkBtn[finalI].setBackgroundColor(chkOff[finalI]);
                         chkBtn[finalI].setTextColor(getResources().getColor(R.color.black));
-                        chkBtn[finalI].setText("\n\n\n" + description[finalI]);
+                        if (description[finalI] != null)
+                            chkBtn[finalI].setText("\n\n\n" + description[finalI]);
+                        else
+                            chkBtn[finalI].setText("\n\n\n" + "やることをせっていしていないよ");
                     }
                     Log.d(String.valueOf(finalI), String.valueOf(clear[finalI]));
                 }
@@ -99,39 +106,49 @@ public class MissionActivity extends AppCompatActivity {
 
 
         Button btnNext = (Button) this.findViewById(R.id.button2);
+
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean ok = false;
+                for (int i = 0; i < missionId.length; i++) {
+                    if (clear[i] && missionId[i] != -1)
+                        ok = true;
+                }
                 // 確認ダイアログの生成
-                AlertDialog.Builder alertDlg = new AlertDialog.Builder(MissionActivity.this);
-                alertDlg.setTitle("ちゃんとできましたか？");
-                alertDlg.setMessage("まちがったら「いいえ、もどる」をおしてね");
-                alertDlg.setPositiveButton(
-                        "だいじょうぶ！ちゃんとできた！",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
-                                for (int i = 0; i < recentlevel.length; i++)
-                                    intent.putExtra("recentlevel" + i, recentlevel[i]);
-                                new Clear().execute();
-                                // 返却したい結果ステータスをセットする
-                                setResult(Activity.RESULT_OK, intent);
-                                // アクティビティを終了させる
-                                finish();
-                            }
-                        });
-                alertDlg.setNegativeButton(
-                        "いいえ、もどる",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Cancel ボタンクリック処理(消すだけ)
-                            }
-                        });
+                if (ok) {
+                    AlertDialog.Builder alertDlg = new AlertDialog.Builder(MissionActivity.this);
+                    alertDlg.setTitle("ちゃんとできましたか？");
+                    alertDlg.setMessage("まちがったら「いいえ、もどる」をおしてね");
+                    alertDlg.setPositiveButton(
+                            "だいじょうぶ！ちゃんとできた！",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
+                                    for (int i = 0; i < recentlevel.length; i++)
+                                        intent.putExtra("recentlevel" + i, recentlevel[i]);
+                                    new Clear().execute();
+                                    // 返却したい結果ステータスをセットする
+                                    setResult(Activity.RESULT_OK, intent);
+                                    // アクティビティを終了させる
+                                    finish();
+                                }
+                            });
+                    alertDlg.setNegativeButton(
+                            "              いいえ、もどる                ",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Cancel ボタンクリック処理(消すだけ)
+                                }
+                            });
 
-                // 表示
-                alertDlg.create().show();
+                    // 表示
+                    alertDlg.create().show();
+                } else
+                    Toast.makeText(MissionActivity.this, "できたものをえらんでないよ", Toast.LENGTH_LONG).show();
             }
         });
+
 
         //戻る
         Button btn = (Button) this.findViewById(R.id.button10);
