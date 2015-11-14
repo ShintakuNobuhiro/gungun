@@ -208,7 +208,7 @@ public class GameView extends View {
         paint.setColor(Color.argb(255, 0, 0, 0));
         paint.setTextSize(48);
         paint.setAntiAlias(true);
-        if(offset == offset_int){
+        if(offset == offset_int && cell != 0){
             canvas.drawText("どこまですすめたかな？タップしてみよう！", 310, (float) (badgeSize * 2.5), paint);
         }
         if (offset - offset_int < distance) {
@@ -282,11 +282,12 @@ public class GameView extends View {
             else
                 canvas.drawText(badgeName[cell]+ "(" + badgeName_read[cell] + ")をゲットした！",310, badgeSize * 3, paint);
             paint.setColor(Color.argb(255, 255, 0, 0));
-            if(frameIndex-stopFrame >= 200)
-                if(cell == station.length-1)
-                    canvas.drawText("東京えきにとうちゃく！おめでとう",310,(float)(badgeSize*3.5),paint);
+            if(frameIndex-stopFrame >= 300) {
+                if (cell == station.length - 1)
+                    canvas.drawText("東京えきにとうちゃく！おめでとう", 310, (float) (badgeSize * 3.5), paint);
                 else
-                    canvas.drawText("東京えきまで"+ String.valueOf(station.length - cell)+"えき！つぎもがんばろう！",310,(float)(badgeSize*3.5),paint);
+                    canvas.drawText("東京えきまで" + String.valueOf(station.length - cell) + "えき！つぎもがんばろう！", 310, (float) (badgeSize * 3.5), paint);
+            }
         }
         paint.setAntiAlias(false);
 

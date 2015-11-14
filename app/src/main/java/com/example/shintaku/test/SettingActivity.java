@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 //課題大項目選択画面
 public class SettingActivity extends AppCompatActivity {
     final String str[] = new String[4];
-    final int[] mission_id = new int[2];
+    final int[] mission_id = {-1,-1};
     String nfcId,password,URL;
 
     @Override
@@ -41,7 +41,7 @@ public class SettingActivity extends AppCompatActivity {
         password = sp.getString(nfcId, "");
         URL = sp.getString("URL","");
         Log.d("nfc", nfcId + "," + password);
-
+        new Mission().execute();
 
         Button btn = (Button) this.findViewById(R.id.checkButton); //健康
         btn.setOnClickListener(new View.OnClickListener() {
@@ -113,14 +113,16 @@ public class SettingActivity extends AppCompatActivity {
                 jobj.put("card_number", nfcId);
                 jobj.put("password", password);
                 JSONArray tmp = new JSONArray();
-                tmp.put(mission_id[0]);
-                tmp.put(mission_id[1]);
+                for(int i=0;i<2;i++) {
+                    if(mission_id[i] != -1)
+                        tmp.put(mission_id[i]);
+                }
                 jobj.put("mission_ids", tmp);
                 Log.d("test", String.valueOf(jobj));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-             return postJsonObject(URL+"/api/assigns.json", jobj);
+             return postJsonObject(URL + "/api/assigns.json", jobj);
         }
 
         @Override
@@ -129,6 +131,79 @@ public class SettingActivity extends AppCompatActivity {
             Log.d("start", String.valueOf(result));
         }
     }
+    class Mission extends AsyncTask<Void, Void, JSONObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            JSONObject jobj = new JSONObject();
+            try {
+                jobj.put("password", password);
+                Log.d("test", String.valueOf(jobj));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return postJsonObject(URL + "/api/users/" + nfcId + ".json", jobj);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+            Log.d("start", String.valueOf(result));
+            try {
+                Button btn1 = (Button) SettingActivity.this.findViewById(R.id.checkButton); //健康
+                Button btn2 = (Button) SettingActivity.this.findViewById(R.id.checkButton2); //お友達あいさつ
+                String description[] = new String[4];
+
+                //パース準備
+                JSONArray missions = null;
+                JSONObject mission[] = new JSONObject[4];
+                if (result != null) {
+                    missions = result.getJSONArray("assigns");
+                }
+
+                //mission分解、説明の配列化
+                JSONObject category[] = new JSONObject[mission.length];
+                String category_name[] = new String[category.length];
+                int missionIdTmp[] = new int[mission.length];
+                String descriptionTmp[] = new String[mission.length];
+                if (missions != null) {
+                    for (int i = 0; i < missions.length(); i++) {
+                        mission[i] = missions.getJSONObject(i);
+                        category[i] = mission[i].getJSONObject("category");
+                        category_name[i] = category[i].getString("name");
+                        Log.d("name", category_name[i]);
+                        missionIdTmp[i] = mission[i].getInt("mission_id");
+                        descriptionTmp[i] = mission[i].getString("description");
+                    }
+                    for (int i = 0; i < 2; i++) {
+                        if (category_name[i] != null) {
+                            Log.d("name", category_name[i]);
+                            if (category_name[i].equals("けんこう")) {
+                                mission_id[0] = missionIdTmp[i];
+                                description[0] = descriptionTmp[i];
+                            }
+                            if (category_name[i].equals("お友だちとあいさつ")) {
+                                mission_id[1] = missionIdTmp[i];
+                                description[1] = descriptionTmp[i];
+                            }
+                        }
+                    }
+                    if(description[0] != null)
+                        btn1.setText(description[0]);
+                    if(description[1] != null)
+                        btn2.setText(description[1]);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
     public JSONObject postJsonObject(String url, JSONObject loginJson) {

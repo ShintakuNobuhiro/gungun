@@ -184,12 +184,32 @@ public class MissionActivity extends AppCompatActivity {
                     missions = result.getJSONArray("assigns");
                 }
                 //mission分解、説明の配列化
+                JSONObject category[] = new JSONObject[mission.length];
+                String category_name[] = new String[category.length];
+                int missionIdTmp[] = new int[mission.length];
+                String descriptionTmp[] = new String[mission.length];
                 if(missions!=null) {
                     for (int i = 0; i < missions.length(); i++) {
                         mission[i] = missions.getJSONObject(i);
-                        missionId[i] = mission[i].getInt("mission_id");
-                        description[i] = mission[i].getString("description");
-                        chkBtn[i].setText("\n\n\n"+description[i]);
+                        category[i] = mission[i].getJSONObject("category");
+                        category_name[i] = category[i].getString("name");
+                        Log.d("name",category_name[i]);
+                        missionIdTmp[i] = mission[i].getInt("mission_id");
+                        descriptionTmp[i] = mission[i].getString("description");
+                    }
+                    for(int i=0;i<2; i++) {
+                        if(category_name[i] != null) {
+                            Log.d("name", category_name[i]);
+                            if (category_name[i].equals("けんこう")) {
+                                missionId[0] = missionIdTmp[i];
+                                description[0] = descriptionTmp[i];
+                            }
+                            if (category_name[i].equals("お友だちとあいさつ")) {
+                                missionId[1] = missionIdTmp[i];
+                                description[1] = descriptionTmp[i];
+                            }
+                        }
+                        chkBtn[i].setText(description[i]);
                     }
                 }
             } catch (JSONException e) {
