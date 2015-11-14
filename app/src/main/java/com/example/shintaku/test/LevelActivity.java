@@ -3,6 +3,7 @@ package com.example.shintaku.test;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -250,8 +251,10 @@ public class LevelActivity extends AppCompatActivity {
                         levelView[i] = (TextView) findViewById(lvlId[i]);
                         if(level[i] == recentlevel[i] || recentlevel[i] == 0)
                             levelView[i].setText("レベル"+ level[i]);
-                        else
-                            levelView[i].setText("レベルアップ！！ レベル"+level[i]);
+                        else {
+                            levelView[i].setTextColor(Color.RED);
+                            levelView[i].setText("レベルアップ！！ レベル" + level[i]);
+                        }
 
                         MyTimerTask timerTask;
                         Timer timer;
