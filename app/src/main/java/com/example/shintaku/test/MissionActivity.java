@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -106,46 +105,37 @@ public class MissionActivity extends AppCompatActivity {
 
 
         Button btnNext = (Button) this.findViewById(R.id.button2);
-
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean ok = false;
-                for (int i = 0; i < missionId.length; i++) {
-                    if (clear[i] && missionId[i] != -1)
-                        ok = true;
-                }
                 // 確認ダイアログの生成
-                if (ok) {
-                    AlertDialog.Builder alertDlg = new AlertDialog.Builder(MissionActivity.this);
-                    alertDlg.setTitle("ちゃんとできましたか？");
-                    alertDlg.setMessage("まちがったら「いいえ、もどる」をおしてね");
-                    alertDlg.setPositiveButton(
-                            "だいじょうぶ！ちゃんとできた！",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
-                                    for (int i = 0; i < recentlevel.length; i++)
-                                        intent.putExtra("recentlevel" + i, recentlevel[i]);
-                                    new Clear().execute();
-                                    // 返却したい結果ステータスをセットする
-                                    setResult(Activity.RESULT_OK, intent);
-                                    // アクティビティを終了させる
-                                    finish();
-                                }
-                            });
-                    alertDlg.setNegativeButton(
-                            "              いいえ、もどる                ",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Cancel ボタンクリック処理(消すだけ)
-                                }
-                            });
+                AlertDialog.Builder alertDlg = new AlertDialog.Builder(MissionActivity.this);
+                alertDlg.setTitle("ちゃんとできましたか？");
+                alertDlg.setMessage("まちがったら「いいえ、もどる」をおしてね");
+                alertDlg.setPositiveButton(
+                        "だいじょうぶ！ちゃんとできた！",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
+                                for (int i = 0; i < recentlevel.length; i++)
+                                    intent.putExtra("recentlevel" + i, recentlevel[i]);
+                                new Clear().execute();
+                                // 返却したい結果ステータスをセットする
+                                setResult(Activity.RESULT_OK, intent);
+                                // アクティビティを終了させる
+                                finish();
+                            }
+                        });
+                alertDlg.setNegativeButton(
+                        "              いいえ、もどる                ",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Cancel ボタンクリック処理(消すだけ)
+                            }
+                        });
 
-                    // 表示
-                    alertDlg.create().show();
-                } else
-                    Toast.makeText(MissionActivity.this, "できたものをえらんでないよ", Toast.LENGTH_LONG).show();
+                // 表示
+                alertDlg.create().show();
             }
         });
 

@@ -282,7 +282,7 @@ public class GameView extends View {
             else
                 canvas.drawText(badgeName[cell]+ "(" + badgeName_read[cell] + ")をゲットした！",310, badgeSize * 3, paint);
             paint.setColor(Color.argb(255, 255, 0, 0));
-            if(frameIndex-stopFrame >= 40)
+            if(frameIndex-stopFrame >= 200)
                 if(cell == station.length-1)
                     canvas.drawText("東京えきにとうちゃく！おめでとう",310,(float)(badgeSize*3.5),paint);
                 else
