@@ -187,7 +187,7 @@ public class SettingActivity extends AppCompatActivity {
                                 mission_id[0] = missionIdTmp[i];
                                 description[0] = descriptionTmp[i];
                             }
-                            if (category_name[i].equals("お友だちとあいさつ")) {
+                            else if (category_name[i].equals("お友だちとあいさつ")) {
                                 mission_id[1] = missionIdTmp[i];
                                 description[1] = descriptionTmp[i];
                             }

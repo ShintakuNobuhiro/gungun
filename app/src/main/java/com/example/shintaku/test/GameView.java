@@ -208,10 +208,9 @@ public class GameView extends View {
         paint.setColor(Color.argb(255, 0, 0, 0));
         paint.setTextSize(48);
         paint.setAntiAlias(true);
-        if(offset == offset_int && cell != 0){
+        if(offset == offset_int && !start){
             canvas.drawText("どこまですすめたかな？タップしてみよう！", 310, (float) (badgeSize * 2.5), paint);
-        }
-        if (offset - offset_int < distance) {
+        } else if (offset - offset_int < distance) {
             Log.d("test", String.valueOf(frameIndex - stopFrame));
             if (start) {
                 //recent_cellの次～cellは各駅停車しながら移動
@@ -242,17 +241,25 @@ public class GameView extends View {
                         }
                         canvas.drawBitmap(badgeOriginal[t], 0, badgeSize * 2, paint);
                         canvas.drawText(name, 310, (float) (badgeSize * 2.5), paint);
-                        if(badgeName_read[t] == "")
-                            canvas.drawText(badgeName[t] + "をゲットした！", 310, badgeSize * 3, paint);
-                        else
-                            canvas.drawText(badgeName[t]+ "(" + badgeName_read[t] + ")をゲットした！",310, badgeSize *3, paint);
+                        String badgename;
+
+                        if(badgeName_read[t].equals("")) {
+                            badgename = badgeName[t];
+                        }
+                        else {
+                            badgename = badgeName[t]+"("+badgeName_read[t]+")";
+                        }
+                        paint.setColor(Color.parseColor("#ff6347"));
+                        canvas.drawText(badgename, 310, badgeSize * 3, paint);
+                        paint.setColor(Color.argb(255, 0, 0, 0));
+                        canvas.drawText("をゲットした！", 310+badgename.length()*47,badgeSize*3,paint);
                     }
                 } else {
                     offset += speed;
                     stopFrame = frameIndex;
                 }
             }
-        } else if(recent_cell == cell) {
+        } else if(recent_cell == cell && cell != 0) {
             rect = new RectF(0, 0, 200, 200);
             rect.offset(920,-360);
             canvas.save();
@@ -265,7 +272,13 @@ public class GameView extends View {
             canvas.drawText("つぎのえきまでもう少しだ！",310,badgeSize*3,paint);
             paint.setColor(Color.argb(255, 255, 0, 0));
             canvas.drawText("東京えきまで"+ String.valueOf(station.length - cell)+"えき！つぎもがんばろう！",310,(float)(badgeSize*3.5),paint);
-        } else {
+        } else if(cell == 0){
+            canvas.drawBitmap(badgeOriginal[cell],0,badgeSize * 2,paint);
+            canvas.drawText("新青森えきにいるよ！ねぶたをゲットした！",310,(float) (badgeSize * 2.5),paint);
+            canvas.drawText("もくひょうをきめてがんばろう！がんばるとしんかんせんがすすむよ！",310,badgeSize*3,paint);
+            canvas.drawText("しんかんせんをすすめて東京えきまでバッジをあつめていこう！",310, (float) (badgeSize*3.5),paint);
+        }
+        else {
             start = false;
             rect = new RectF(0, 0, 200, 200);
             rect.offset(920, -360);
@@ -277,10 +290,19 @@ public class GameView extends View {
             paint.setColor(Color.parseColor("#000000"));
             canvas.drawBitmap(badgeOriginal[cell], 0, badgeSize * 2, paint);
             canvas.drawText(station[cell] + "(" + station_read[cell] + ")" + "えきについた！", 310, (float) (badgeSize * 2.5), paint);
-            if(badgeName_read[cell] == "")
-                canvas.drawText(badgeName[cell] + "をゲットした！", 310, badgeSize * 3, paint);
-            else
-                canvas.drawText(badgeName[cell]+ "(" + badgeName_read[cell] + ")をゲットした！",310, badgeSize * 3, paint);
+            String badgename;
+
+            if(badgeName_read[cell].equals("")) {
+                badgename = badgeName[cell];
+            }
+            else {
+                badgename = badgeName[cell]+"("+badgeName_read[cell]+")";
+            }
+            paint.setColor(Color.parseColor("#ff6347"));
+            canvas.drawText(badgename, 310, badgeSize * 3, paint);
+            paint.setColor(Color.argb(255, 0, 0, 0));
+            canvas.drawText("をゲットした！", 310 + badgename.length() * 47, badgeSize * 3, paint);
+
             paint.setColor(Color.argb(255, 255, 0, 0));
             if(frameIndex-stopFrame >= 300) {
                 if (cell == station.length - 1)

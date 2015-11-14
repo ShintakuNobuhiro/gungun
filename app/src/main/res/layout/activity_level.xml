@@ -41,7 +41,7 @@
         android:height="100dp"
         android:layout_alignRight="@+id/button8"
         android:layout_alignEnd="@+id/button8"
-        android:text="もくひょうをきめる" />
+        android:text="もくひょう\nきめる・かくにん" />
 
     <Button
         android:layout_width="wrap_content"

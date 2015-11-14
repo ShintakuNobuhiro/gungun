@@ -110,10 +110,10 @@ public class MissionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 確認ダイアログの生成
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(MissionActivity.this);
-                alertDlg.setTitle("ちゃんとできましたか？");
-                alertDlg.setMessage("まちがったら「いいえ、もどる」をおしてね");
+                alertDlg.setTitle("ほんとうにけっていしてだいじょうぶですか？");
+                alertDlg.setMessage("まちがっておしたら「いいえ、もどる」をおしてね");
                 alertDlg.setPositiveButton(
-                        "だいじょうぶ！ちゃんとできた！",
+                        "だいじょうぶ！けっていする！",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(MissionActivity.this, LevelActivity.class);
@@ -204,12 +204,15 @@ public class MissionActivity extends AppCompatActivity {
                                 missionId[0] = missionIdTmp[i];
                                 description[0] = descriptionTmp[i];
                             }
-                            if (category_name[i].equals("お友だちとあいさつ")) {
+                            else if (category_name[i].equals("お友だちとあいさつ")) {
                                 missionId[1] = missionIdTmp[i];
                                 description[1] = descriptionTmp[i];
                             }
                         }
-                        chkBtn[i].setText(description[i]);
+                        if(description[i] != null)
+                            chkBtn[i].setText("\n\n\n"+description[i]);
+                        else
+                            chkBtn[i].setText("\n\n\nやることをせっていしてないよ");
                     }
                 }
             } catch (JSONException e) {
@@ -234,7 +237,7 @@ public class MissionActivity extends AppCompatActivity {
                 jobj.put("password", password);
                 JSONArray check = new JSONArray();
                 for (int i = 0; i < 4; i++) {
-                    if (clear[i] == true && missionId[i] != -1)
+                    if (clear[i] && missionId[i] != -1)
                         check.put(missionId[i]);
                 }
                 jobj.put("mission_ids", check);

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -180,15 +181,18 @@ public class LevelActivity extends AppCompatActivity {
                     int recentExp[] = new int[statuses.length()];
                     int exp[] = new int[statuses.length()];//現在経験値
                     int next[] = new int[statuses.length()];//レベルアップに必要な経験値
-
+                    int recentExpTmp[] = new int[statuses.length()];
+                    int expTmp[] = new int[statuses.length()];//現在経験値
+                    int nextTmp[] = new int[statuses.length()];//レベルアップに必要な経験値
+                    int levelTmp[] = new int[statuses.length()];
                     String category[] = new String[statuses.length()];
                     //ステータスの各項目分解、経験値の配列化
                     for (int i = 0; i < statuses.length(); i++) {
                         JSONObject status = statuses.getJSONObject(i);
-                        recentExp[i] = status.getInt("recent_experience");
-                        exp[i] = status.getInt("experience");
-                        next[i] = status.getInt("next_level_required_experience");
-                        level[i] = status.getInt("level");
+                        recentExpTmp[i] = status.getInt("recent_experience");
+                        expTmp[i] = status.getInt("experience");
+                        nextTmp[i] = status.getInt("next_level_required_experience");
+                        levelTmp[i] = status.getInt("level");
                         category[i] = status.getString("category");
                     }
                     //名前の表示
@@ -204,10 +208,43 @@ public class LevelActivity extends AppCompatActivity {
                     ProgressBar progressBar[] = new ProgressBar[progId.length];
                     TextView categoryView[] = new TextView[catId.length];
 
+                    for(int i=0;i<statuses.length();i++){
+                        if(category[i].equals("けんこう")) {
+                            exp[0] = expTmp[i];
+                            next[0] = nextTmp[i];
+                            recentExp[0] = recentExpTmp[i];
+                            level[0] = levelTmp[i];
+                        }
+                        else if(category[i].equals("お友だちとあいさつ")){
+                            exp[1] = expTmp[i];
+                            next[1] = nextTmp[i];
+                            recentExp[1] = recentExpTmp[i];
+                            level[1] = levelTmp[i];
+                        } else if(category[i].equals("うんどうとおしごと")){
+                            exp[2] = expTmp[i];
+                            next[2] = nextTmp[i];
+                            recentExp[2] = recentExpTmp[i];
+                            level[2] = levelTmp[i];
+                        } else if(category[i].equals("くらし")){
+                            exp[3] = expTmp[i];
+                            next[3] = nextTmp[i];
+                            recentExp[3] = recentExpTmp[i];
+                            level[3] = levelTmp[i];
+                        }
+                    }
+
                     for (int i = 0; i < statuses.length(); i++) {
                         progressBar[i] = (ProgressBar) findViewById(progId[i]);
                         categoryView[i] = (TextView) findViewById(catId[i]);
-                        progressBar[i].setMax(next[i]-requireExp.get(level[i]-1)); // 水平プログレスバーの最大値を設定
+                        int e;
+                        if(requireExp != null) {
+                            e = requireExp.get(level[i] - 1);
+                            progressBar[i].setMax(next[i] - e); // 水平プログレスバーの最大値を設定
+                        }
+                        else {
+                            Toast.makeText(LevelActivity.this, "もういちどカードをよみこんでね", Toast.LENGTH_LONG).show();
+                            progressBar[i].setMax(next[i]);
+                        }
                         if(exp[i] >= recentExp[i])
                             progressBar[i].setProgress(recentExp[i]-requireExp.get(level[i]-1));
                         levelView[i] = (TextView) findViewById(lvlId[i]);
@@ -215,7 +252,6 @@ public class LevelActivity extends AppCompatActivity {
                             levelView[i].setText("レベル"+ level[i]);
                         else
                             levelView[i].setText("レベルアップ！！ レベル"+level[i]);
-                        categoryView[i].setText(category[i]);
 
                         MyTimerTask timerTask;
                         Timer timer;
