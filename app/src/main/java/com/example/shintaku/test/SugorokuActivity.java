@@ -39,14 +39,18 @@ public class SugorokuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sugoroku);
+        System.gc();
         final SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         nfcId = sp.getString("nfc_id","");
         password = sp.getString(nfcId,"");
         URL = sp.getString("URL","");
         new Loader().execute();
+    }
 
-
-
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        System.gc();
     }
 
     class Loader extends AsyncTask<Void, Void, JSONObject> {
@@ -64,7 +68,6 @@ public class SugorokuActivity extends AppCompatActivity {
             try {
                 jobj.put("card_number", nfcId);
                 jobj.put("password", password);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -100,7 +103,6 @@ public class SugorokuActivity extends AppCompatActivity {
                             });
                         }
                     }, 0, MSEC);
-
                 } catch (JSONException e) { //JSONObject等例外発生時
                     Log.e("error", e.toString());
                     e.printStackTrace();
