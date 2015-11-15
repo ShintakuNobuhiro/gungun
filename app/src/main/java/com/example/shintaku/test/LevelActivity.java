@@ -64,9 +64,6 @@ public class LevelActivity extends AppCompatActivity {
         URL = sp.getString("URL","");
         Log.d("nfc", nfcId + "," + password);
 
-        new Loader().execute();
-
-
         //課題選択ボタン
         Button btn = (Button) this.findViewById(R.id.button4);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +102,17 @@ public class LevelActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new Loader().execute();
+        android.net.ConnectivityManager connectivityManager =
+                (android.net.ConnectivityManager) getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
+
+        android.net.NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new Levels().execute();
+            new Loader().execute();
+        } else {
+            Toast.makeText(this, "エラー:インターネットにつながっていないよ！\n\n支援者の方へ：インターネット未接続です。Wi-Fi等の状態を確かめた上で再試行してください。", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override
@@ -152,7 +159,6 @@ public class LevelActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            new Levels().execute();
         }
 
         @Override
@@ -296,6 +302,7 @@ public class LevelActivity extends AppCompatActivity {
             super.onPreExecute();
             if (requireExp != null) {
                 requireExp.clear();
+                requireExp = new ArrayList<>();
             }
         }
 
@@ -459,6 +466,7 @@ public class LevelActivity extends AppCompatActivity {
                 }
             }
         }
+        new Levels().execute();
         new Loader().execute();
     }
 }

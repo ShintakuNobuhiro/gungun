@@ -235,7 +235,7 @@ public class GameView extends View {
                         int t = -1;
                         for(int i=recent_cell;i<=cell;i++){
                             if(offset-offset_int >= i*(width/imageCell) ) {
-                                name = station[i] + "(" + station_read[i] + ")" + "えきについた！";
+                                name = station[i] + "（" + station_read[i] + "）" + "えきについた！";
                                 t = i;
                             }
                         }
@@ -247,7 +247,7 @@ public class GameView extends View {
                             badgename = badgeName[t];
                         }
                         else {
-                            badgename = badgeName[t]+"("+badgeName_read[t]+")";
+                            badgename = badgeName[t]+"（"+badgeName_read[t]+"）";
                         }
                         paint.setColor(Color.parseColor("#ff6347"));
                         canvas.drawText(badgename, 310, badgeSize * 3, paint);
@@ -268,7 +268,7 @@ public class GameView extends View {
             canvas.drawRect(rect, paint);
             canvas.restore();
             paint.setColor(Color.parseColor("#000000"));
-            canvas.drawText(station[cell] + "(" + station_read[cell] + ")" + "えきにいるよ！", 310, (float) (badgeSize * 2.5), paint);
+            canvas.drawText(station[cell] + "（" + station_read[cell] + "）" + "えきにいるよ！", 310, (float) (badgeSize * 2.5), paint);
             canvas.drawText("つぎのえきまでもう少しだ！",310,badgeSize*3,paint);
             paint.setColor(Color.argb(255, 255, 0, 0));
             canvas.drawText("東京えきまで"+ String.valueOf(station.length - cell)+"えき！つぎもがんばろう！",310,(float)(badgeSize*3.5),paint);
@@ -289,14 +289,14 @@ public class GameView extends View {
             canvas.restore();
             paint.setColor(Color.parseColor("#000000"));
             canvas.drawBitmap(badgeOriginal[cell], 0, badgeSize * 2, paint);
-            canvas.drawText(station[cell] + "(" + station_read[cell] + ")" + "えきについた！", 310, (float) (badgeSize * 2.5), paint);
+            canvas.drawText(station[cell] + "（" + station_read[cell] + "）" + "えきについた！", 310, (float) (badgeSize * 2.5), paint);
             String badgename;
 
             if(badgeName_read[cell].equals("")) {
                 badgename = badgeName[cell];
             }
             else {
-                badgename = badgeName[cell]+"("+badgeName_read[cell]+")";
+                badgename = badgeName[cell]+"（"+badgeName_read[cell]+"）";
             }
             paint.setColor(Color.parseColor("#ff6347"));
             canvas.drawText(badgename, 310, badgeSize * 3, paint);

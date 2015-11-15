@@ -77,26 +77,21 @@ public class MissionActivity extends AppCompatActivity {
                 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void onClick(View v) {
-                    if (!clear[finalI]) {
-                        clear[finalI] = true;
-                        /*if(finalI < 2) {
-                            chkBtn[finalI].setBackground(getDrawable(chkOnId[finalI]));
-                        }
-                        else*/
-                        chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
-                        chkBtn[finalI].setTextColor(getResources().getColor(R.color.white));
-                        if (description[finalI] != null)
+                    if (description[finalI] != null) {
+                        if (!clear[finalI]) {
+                            clear[finalI] = true;
+                            chkBtn[finalI].setBackgroundColor(chkOn[finalI]);
+                            chkBtn[finalI].setTextColor(getResources().getColor(R.color.white));
                             chkBtn[finalI].setText("○\nできた\n\n" + description[finalI]);
-                        else
-                            chkBtn[finalI].setText("\n\n\n" + "やることをせっていしていないよ");
-                    } else {
-                        clear[finalI] = false;
-                        chkBtn[finalI].setBackgroundColor(chkOff[finalI]);
-                        chkBtn[finalI].setTextColor(getResources().getColor(R.color.black));
-                        if (description[finalI] != null)
+                        } else {
+                            clear[finalI] = false;
+                            chkBtn[finalI].setBackgroundColor(chkOff[finalI]);
+                            chkBtn[finalI].setTextColor(getResources().getColor(R.color.black));
                             chkBtn[finalI].setText("\n\n\n" + description[finalI]);
-                        else
-                            chkBtn[finalI].setText("\n\n\n" + "やることをせっていしていないよ");
+                        }
+                    } else {
+                        chkBtn[finalI].setBackgroundColor(chkOff[finalI]);
+                        chkBtn[finalI].setText("");
                     }
                     Log.d(String.valueOf(finalI), String.valueOf(clear[finalI]));
                 }
@@ -212,7 +207,7 @@ public class MissionActivity extends AppCompatActivity {
                         if(description[i] != null)
                             chkBtn[i].setText("\n\n\n"+description[i]);
                         else
-                            chkBtn[i].setText("\n\n\nやることをせっていしてないよ");
+                            chkBtn[i].setText("");
                     }
                 }
             } catch (JSONException e) {

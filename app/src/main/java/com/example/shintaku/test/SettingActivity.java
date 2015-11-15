@@ -3,6 +3,7 @@ package com.example.shintaku.test;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -94,7 +95,8 @@ public class SettingActivity extends AppCompatActivity {
                 Intent intent = new Intent(SettingActivity.this, LevelActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                new Loader().execute();
+                if(mission_id[0] != -1)
+                    new Loader().execute();
                 startActivity(intent);
             }
         });
@@ -193,10 +195,14 @@ public class SettingActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    if(description[0] != null)
+                    if(description[0] != null) {
+                        btn1.setTextColor(Color.argb(255,255,255,255));
                         btn1.setText(description[0]);
-                    if(description[1] != null)
+                    }
+                    if(description[1] != null) {
+                        btn1.setTextColor(Color.argb(255,255,255,255));
                         btn2.setText(description[1]);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -303,11 +309,13 @@ public class SettingActivity extends AppCompatActivity {
                     btn = (Button) findViewById(R.id.checkButton);
                     mission_id[0] = Integer.parseInt(intent.getStringExtra("id"));
                     Log.d(getString(R.string.genre1),str[0]+","+mission_id[0]);
+                    btn.setTextColor(Color.argb(255, 255, 255, 255));
                     btn.setText(str[0]);
                 }
                 else if (intent.getStringExtra(getString(R.string.genre2)) != null) {
                     str[1] = intent.getStringExtra(getString(R.string.genre2));
                     btn = (Button) findViewById(R.id.checkButton2);
+                    btn.setTextColor(Color.argb(255,255,255,255));
                     btn.setText(str[1]);
                     mission_id[1] = Integer.parseInt(intent.getStringExtra("id"));
                     Log.d(getString(R.string.genre2),str[1]+","+mission_id[1]);
