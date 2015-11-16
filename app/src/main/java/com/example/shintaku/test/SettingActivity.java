@@ -95,7 +95,7 @@ public class SettingActivity extends AppCompatActivity {
                 Intent intent = new Intent(SettingActivity.this, LevelActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                if(mission_id[0] != -1)
+                if(mission_id[0] != -1 || mission_id[1] != -1)
                     new Loader().execute();
                 startActivity(intent);
             }
@@ -116,11 +116,12 @@ public class SettingActivity extends AppCompatActivity {
                 jobj.put("password", password);
                 JSONArray tmp = new JSONArray();
                 for(int i=0;i<2;i++) {
+                    Log.d("genre"+(i+1), String.valueOf(mission_id[i]));
                     if(mission_id[i] != -1)
                         tmp.put(mission_id[i]);
                 }
                 jobj.put("mission_ids", tmp);
-                Log.d("test", String.valueOf(jobj));
+                Log.d("post", String.valueOf(jobj));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -200,7 +201,7 @@ public class SettingActivity extends AppCompatActivity {
                         btn1.setText(description[0]);
                     }
                     if(description[1] != null) {
-                        btn1.setTextColor(Color.argb(255,255,255,255));
+                        btn2.setTextColor(Color.argb(255,255,255,255));
                         btn2.setText(description[1]);
                     }
                 }
